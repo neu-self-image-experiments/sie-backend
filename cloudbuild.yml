@@ -4,7 +4,7 @@ steps:
   - functions
   - deploy
   - hello_http
-  - --region=us-central-1
+  - --region=us-central1
   - --source=./helloworld
   - --trigger-http
   - --allow-unauthenticated
