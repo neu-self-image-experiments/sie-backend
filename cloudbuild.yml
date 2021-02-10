@@ -1,0 +1,10 @@
+steps:
+- name: 'gcr.io/cloud-builders/gcloud'
+  args:
+  - functions
+  - deploy
+  - hello_http
+  - --region=us-central-1
+  - --source=./helloworld
+  - --trigger-http
+  - --allow-unauthenticated
