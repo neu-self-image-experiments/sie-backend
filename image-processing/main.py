@@ -1,5 +1,7 @@
-# This cloud function gets triggered by a change in `sie-raw-images` storage bucket
-# It picks up the newly created image and sends it to cloud vision API for pre-processing
+# This cloud function gets triggered by a change
+# in `sie-raw-images` storage bucket
+# It picks up the newly created image and sends it
+# to cloud vision API for pre-processing
 # Then runs the provided R-script to generate processed images
 
 
