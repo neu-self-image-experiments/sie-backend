@@ -2,6 +2,7 @@
 # It picks up the newly created image and sends it to cloud vision API for pre-processing
 # Then runs the provided R-script to generate processed images
 
+
 def trigger_event(event, context):
     """
     Background Cloud Function to be triggered by Cloud Storage.
@@ -24,4 +25,3 @@ def trigger_event(event, context):
     print("Metageneration: {}".format(event["metageneration"]))
     print("Created: {}".format(event["timeCreated"]))
     print("Updated: {}".format(event["updated"]))
-    
