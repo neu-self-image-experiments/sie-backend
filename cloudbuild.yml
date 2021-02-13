@@ -1,10 +1,21 @@
 steps:
 - name: 'gcr.io/cloud-builders/gcloud'
   args:
-  - functions
-  - deploy
-  - hello_http
-  - --region=us-central1
-  - --source=./helloworld
-  - --trigger-http
-  - --allow-unauthenticated
+    - functions
+    - deploy
+    - hello_http
+    - --region=us-central1
+    - --source=./helloworld
+    - --trigger-http
+    - --allow-unauthenticated
+
+- name: 'gcr.io/cloud-builders/gcloud'
+  args:
+    - functions
+    - deploy
+    - trigger_event
+    - --runtime=python38
+    - --region=us-central1
+    - --source=./image-processing
+    - --trigger-resource=sie-raw-images
+    - --trigger-event=google.storage.object.finalize
