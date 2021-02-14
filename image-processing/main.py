@@ -25,20 +25,21 @@ def trigger_event(event, context):
 
     bucket_name = event["bucket"]
     source_img = event["name"]
+    tmp_download_path = f"/tmp/{source_img}"
 
     try:
-        img_file = download_image(bucket_name, source_img, "/tmp")
-        print(f"Image {img_file} downloaded to {img_file}")
+        download_image(bucket_name, source_img, tmp_download_path)
+        print(f"Image {source_img} downloaded to {tmp_download_path}")
         # TODO(abi) call cloud vision API with this image
         # TODO(jerry) call R script with features returned from Abi's part
         # TODO(hantao) put processed images to `sie-processed-images` bucket
     except Exception:
         pass
     finally:
-        if os.path.isfile(img_file):
-            os.remove(img_file)
+        if os.path.isfile(tmp_download_path):
+            os.remove(tmp_download_path)
         else:
-            print("Error: %s file not found" % img_file)
+            print("Error: %s file not found" % tmp_download_path)
 
 
 def download_image(bucket_name, source_blob_name, destination_file_name):
