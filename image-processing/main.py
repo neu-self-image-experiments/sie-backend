@@ -65,7 +65,15 @@ def download_image(bucket_name, source_blob_name, destination_file_name):
     blob.download_to_filename(destination_file_name)
 
 def upload_processeed_images(bucket_name, source_file_name, destination_blob_name):
-    """Uploads images to the bucket."""
+    """Uploads images to the bucket.
+    Args:
+        bucket_name = "your-bucket-name"
+        source_file_name = A list of file names to upload
+        destination_blob_name = A list of blob names in corresponding to file names
+
+    Returns:
+        None; 
+    """
 
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
