@@ -1,8 +1,13 @@
-from flask import escape
+import os
+import io
+from flask import escape, request
 from flask_restful import Resource, Api
+from google.cloud import vision
 
 from flask import Flask, jsonify
 from flask_cors import CORS
+
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = r'GVServiceAccountToken.json'
 
 app = Flask(__name__)
 api = Api(app)
@@ -14,10 +19,43 @@ app.config['DEBUG'] = True
 cors = CORS(app, resources={r'/api/*': {'origins': '*'}})
 
 
-@app.route('/', methods=['GET'])
-def testingServer():
-    message = 'hello world!'
-    return jsonify({'response': message})
+def face_detection(uri):
+    """HTTP Cloud Function.
+    Args:
+        request (flask.Request): The request object.
+        <https://flask.palletsprojects.com/en/1.1.x/api/#incoming-request-data>
+    Returns:
+        The response text, or any set of values that can be turned into a
+        Response object using `make_response`
+        <https://flask.palletsprojects.com/en/1.1.x/api/#flask.make_response>.
+    """
+    # _json = request.json
+    # _uri = _json['uri']
+    # print(_uri)
+    vision_client = vision.ImageAnnotatorClient()
+    print(vision_client)
+
+    # image = vision.types.Image()
+    image = vision.Image()
+    image.source.image_uri = uri
+
+    response = vision_client.face_detection(image=image)
+    faceAnnotations = response.face_annotations
+
+    likelihood = ('unknown', 'Very unlikely', 'Unlikely',
+                  'Possibly', 'Likely', 'Very likely')
+
+    for face in faceAnnotations:
+        print('Detection Confidence:  {0}'.format(face.detection_confidence))
+        print('Angry likelyhood:  {0}'.format(
+            likelihood[face.anger_likelihood]))
+        print('Joy likelyhood:  {0}'.format(likelihood[face.joy_likelihood]))
+        print('Sorrow likelyhood:  {0}'.format(
+            likelihood[face.sorrow_likelihood]))
+        print('Surprise likelyhood:  {0}'.format(
+            likelihood[face.surprise_likelihood]))
+        print('Headwear likelyhood:  {0}'.format(
+            likelihood[face.headwear_likelihood]))
 
 
 def hello_http(request):
