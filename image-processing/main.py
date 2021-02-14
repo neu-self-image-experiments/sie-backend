@@ -28,6 +28,7 @@ def trigger_event(event, context):
 
     try:
         img_file = download_image(bucket_name, source_img, "/tmp")
+        print(f"Image {img_file} downloaded to {img_file}")
         # TODO(abi) call cloud vision API with this image
         # TODO(jerry) call R script with features returned from Abi's part
         # TODO(hantao) put processed images to `sie-processed-images` bucket
