@@ -69,10 +69,11 @@ def upload_processeed_images(bucket_name, source_file_folder):
     """Uploads images to the bucket.
     Args:
         bucket_name = "your-bucket-name"
-        source_file_folder = Path to the folder that contains all the processed images
+        source_file_folder = Path to the folder that contains 
+                                all the processed images
 
     Returns:
-        None; 
+        None;
     """
 
     storage_client = storage.Client()
@@ -81,5 +82,5 @@ def upload_processeed_images(bucket_name, source_file_folder):
     for file_name in os.listdir(source_file_folder):
         blob = bucket.blob(file_name)
         blob.upload_from_filename(os.path.join(source_file_folder, file_name))
-    
-        print("File {} uploaded to {}.".format(file_name))
+
+        print("File {} uploaded to {}.".format(file_name, bucket_name))
