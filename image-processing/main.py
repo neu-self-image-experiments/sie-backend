@@ -63,3 +63,28 @@ def download_image(bucket_name, source_blob_name, destination_file_name):
     # using `Bucket.blob` is preferred here.
     blob = bucket.blob(source_blob_name)
     blob.download_to_filename(destination_file_name)
+
+
+def upload_processeed_images(bucket_name, source_file_folder):
+    """Uploads images to the bucket.
+    Args:
+        bucket_name = "your-bucket-name"
+        source_file_name = Path to the folder
+        destination_blob_name = A list of blob names in corresponding to file names
+
+    Returns:
+        None; 
+    """
+
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(bucket_name)
+
+    for file_name in os.listdir(source_file_folder):
+        blob = bucket.blob(file_name)
+        blob.upload_from_filename(os.path.join(source_file_folder, file_name))
+    
+        print(
+            "File {} uploaded to {}.".format(
+                file_name
+            )
+        )
