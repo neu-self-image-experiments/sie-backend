@@ -65,7 +65,7 @@ def download_image(bucket_name, source_blob_name, destination_file_name):
     blob.download_to_filename(destination_file_name)
 
 
-def upload_processeed_images(bucket_name, source_file_folder):
+def upload_processed_images(bucket_name, source_file_folder):
     """Uploads images to the bucket.
     Args:
         bucket_name = "your-bucket-name"
