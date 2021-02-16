@@ -1,25 +1,59 @@
 # sie-backend
 
-## Cloud Functions Tutorial 
+The repository contains code for backend infrastructure of Self Image Experiment (SIE) web-application using Google Cloud Platform. The following sections below will provide you more information on how to setup the local environment.  
 
-https://cloud.google.com/functions/docs/first-python
+
 
 ## Setup development environment
 
+To setup your local env, you will need to install Python 3.6+ and Google SDK in a UNIX based operating system.
+
 * ### Clone the repository 
-    
+
+    ```
+    $ git clone https://github.com/neu-self-image-experiments/sie-backend.git
+    ```
 
 * ### Installing dependencies
-    
+    If you do not have `venv` package you can first install it:
+    ```
+    $ sudo apt install python3-venv
+    ```
+    Then to create new virtual environment run the following command in your project directory:
+    ```
+    $ sudo python3 -m venv venv
+    ```    
+    You need to activate the virtual environment in order to use it. So activate the virtual environment using the following command:
+    ```
+    $ source venv/bin/activate
+    ```
+    Once activated, you would see the shell prompt will change and it will show the name of the virtual environment that you are currently using. In our case it is venv.
+
+    Now install all the dependencies using:
+    ```
+    (venv) $ sudo pip3 install -r requirements.txt
+    ```
+
+    Now run the flask server:
+    ```
+    (venv) $ python3 main.py
+    ```
+
 
 * ### Installing Google SDK
-    
+    To install Google Cloud SDK for your OS: https://cloud.google.com/sdk/docs/install#installation_instructions
 
 * ### Deploying function to Google Cloud
-    
+    Using the gcloud command-line tool, deploy your function from the directory containing your function code with the gcloud functions deploy command:
+    ```
+    gcloud functions deploy FUNCTION_NAME --runtime python37 --trigger-http --allow-unauthenticated
+    ```
 
+    Note: <i> For more information please check - https://cloud.google.com/functions/docs/deploying/filesystem#python_example </i>
 
-## Branching and Merging
+## Contribution policy
+
+### Branching and Merging
 
 When working out on a new feature or fix, checkout out to the `master` branch and pull the new code from the remote repository:
 
@@ -47,8 +81,22 @@ Whenever a PR is approved, make sure you delete your branch to keep the repo cle
 Try to keep your PR short since it will be faster and easier for the reviewer to give appropriate feedback. Otherwise try to divide the task into sub tasks and follow.
 
 
-## Code Review guidelines
+### Code Review guidelines
 
 Reviewers are expected to actually take time to inspect the reviewee's work and flag any potential issue and/or oversight included in the branch. Similarly reviewees are expected to aknowledge any feedback and make adjustments accordingly. Since the PR might be acting as a blocker for other team members, please be mindful and do code reviews as soon as possible (ideally within 24 hours).
 
+## Quick Links
 
+JIRA board: [here](https://cs6510.atlassian.net/secure/RapidBoard.jspa?rapidView=4&projectKey=SIE&selectedIssue=SIE-5)
+
+Confluence Page: [here](https://cs6510.atlassian.net/wiki/spaces/SIE/pages/16941064/Project+Primer)
+
+<hr>
+
+### Learning Resources 
+
+* Cloud Functions Tutorial: https://cloud.google.com/functions/docs/first-python
+* Python Quickstart: https://cloud.google.com/functions/docs/quickstart-python
+* More on Python + GCF: https://medium.com/@timhberry/getting-started-with-python-for-google-cloud-functions-646a8cddbb33
+* Image recognition with GCF: https://www.serverless.com/blog/google-cloud-functions-application
+* More on serverless and GCF: https://www.serverless.com/framework/docs/providers/google/guide/functions/
