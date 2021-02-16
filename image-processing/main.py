@@ -69,7 +69,7 @@ def upload_processeed_images(bucket_name, source_file_folder):
     """Uploads images to the bucket.
     Args:
         bucket_name = "your-bucket-name"
-        source_file_name = Path to the folder
+        source_file_folder = Path to the folder that contains all the processed images
 
     Returns:
         None; 
