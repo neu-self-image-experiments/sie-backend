@@ -6,6 +6,45 @@
 
 import os
 from google.cloud import storage
+from google.cloud import vision
+
+
+def face_detection(uri):
+    """
+    This function detects the faces in the file located in Google Cloud Storage or the web
+    Args:
+        uri: the file located in Google Cloud Storage or the web
+    returns:
+        None: Prints the likelihood of the face expressions or returns an errors resonse in string format 
+    """
+    vision_client = vision.ImageAnnotatorClient()
+    print(vision_client)
+
+    image = vision.Image()
+    image.source.image_uri = uri
+
+    response = vision_client.face_detection(image=image)
+    faceAnnotations = response.face_annotations
+
+    # Making sure that there's only one person in the frame
+    if len(faceAnnotations) != 1:
+        return "Please ensure exactly ONE face is in the image."
+
+    # Lables of likelihood from google.cloud.vision.enums
+    likelihood = ('unknown', 'Very unlikely', 'Unlikely',
+                  'Possibly', 'Likely', 'Very likely')
+
+    for face in faceAnnotations:
+        print('Detection Confidence:  {0}'.format(face.detection_confidence))
+        print('Angry likelyhood:  {0}'.format(
+            likelihood[face.anger_likelihood]))
+        print('Joy likelyhood:  {0}'.format(likelihood[face.joy_likelihood]))
+        print('Sorrow likelyhood:  {0}'.format(
+            likelihood[face.sorrow_likelihood]))
+        print('Surprise likelyhood:  {0}'.format(
+            likelihood[face.surprise_likelihood]))
+        print('Headwear likelyhood:  {0}'.format(
+            likelihood[face.headwear_likelihood]))
 
 
 def trigger_event(event, context):
@@ -30,7 +69,9 @@ def trigger_event(event, context):
     try:
         download_image(bucket_name, source_img, tmp_download_path)
         print(f"Image {source_img} downloaded to {tmp_download_path}")
-        # TODO(abi) call cloud vision API with this image
+        # currenlty this makes sure there's one person in the frame and prints a few other details
+        face_detection(tmp_download_path)
+
         # TODO(jerry) call R script with features returned from Abi's part
         # TODO(hantao) put processed images to `sie-processed-images` bucket
     except Exception:
