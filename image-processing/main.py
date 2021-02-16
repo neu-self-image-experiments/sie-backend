@@ -70,7 +70,6 @@ def upload_processeed_images(bucket_name, source_file_folder):
     Args:
         bucket_name = "your-bucket-name"
         source_file_name = Path to the folder
-        destination_blob_name = A list of blob names in corresponding to file names
 
     Returns:
         None; 
