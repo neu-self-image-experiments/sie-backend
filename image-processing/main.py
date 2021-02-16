@@ -82,8 +82,4 @@ def upload_processeed_images(bucket_name, source_file_folder):
         blob = bucket.blob(file_name)
         blob.upload_from_filename(os.path.join(source_file_folder, file_name))
     
-        print(
-            "File {} uploaded to {}.".format(
-                file_name
-            )
-        )
+        print("File {} uploaded to {}.".format(file_name))
