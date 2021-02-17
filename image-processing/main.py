@@ -11,11 +11,13 @@ from google.cloud import vision
 
 def face_detection(uri):
     """
-    This function detects the faces in the file located in Google Cloud Storage or the web
+    This function detects the faces in the file 
+    located in Google Cloud Storage or the web
     Args:
         uri: the file located in Google Cloud Storage or the web
     returns:
-        None: Prints the likelihood of the face expressions or returns an errors resonse in string format 
+        None: Prints the likelihood of the face expressions
+        or returns an errors resonse in string format
     """
     vision_client = vision.ImageAnnotatorClient()
     print(vision_client)
@@ -31,19 +33,26 @@ def face_detection(uri):
         return "Please ensure exactly ONE face is in the image."
 
     # Lables of likelihood from google.cloud.vision.enums
-    likelihood = ('unknown', 'Very unlikely', 'Unlikely',
-                  'Possibly', 'Likely', 'Very likely')
+
+    likelihood = (
+        "unknown",
+        "Very unlikely",
+        "Unlikely",
+        "Possibly",
+        "Likely",
+        "Very likely",
+    )
 
     for face in faceAnnotations:
-        print('Detection Confidence:  {0}'.format(face.detection_confidence))
-        print('Angry likelyhood:  {0}'.format(
+        print("Detection Confidence:  {0}".format(face.detection_confidence))
+        print("Angry likelyhood:  {0}".format(
             likelihood[face.anger_likelihood]))
-        print('Joy likelyhood:  {0}'.format(likelihood[face.joy_likelihood]))
-        print('Sorrow likelyhood:  {0}'.format(
+        print("Joy likelyhood:  {0}".format(likelihood[face.joy_likelihood]))
+        print("Sorrow likelyhood:  {0}".format(
             likelihood[face.sorrow_likelihood]))
-        print('Surprise likelyhood:  {0}'.format(
+        print("Surprise likelyhood:  {0}".format(
             likelihood[face.surprise_likelihood]))
-        print('Headwear likelyhood:  {0}'.format(
+        print("Headwear likelyhood:  {0}".format(
             likelihood[face.headwear_likelihood]))
 
 
@@ -69,7 +78,8 @@ def trigger_event(event, context):
     try:
         download_image(bucket_name, source_img, tmp_download_path)
         print(f"Image {source_img} downloaded to {tmp_download_path}")
-        # currenlty this makes sure there's one person in the frame and prints a few other details
+        # currenlty this makes sure there's one person
+        # in the frame and prints a few other details
         face_detection(tmp_download_path)
 
         # TODO(jerry) call R script with features returned from Abi's part
