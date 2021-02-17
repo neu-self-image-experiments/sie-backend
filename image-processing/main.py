@@ -44,18 +44,12 @@ def face_detection(uri):
     )
 
     for face in faceAnnotations:
-        print("Detection Confidence:  {0}".
-              format(face.detection_confidence))
-        print("Angry likelyhood:  {0}"
-              .format(likelihood[face.anger_likelihood]))
-        print("Joy likelyhood:  {0}".
-              format(likelihood[face.joy_likelihood]))
-        print("Sorrow likelyhood:  {0}".
-              format(likelihood[face.sorrow_likelihood]))
-        print("Surprise likelyhood:  {0}".
-              format(likelihood[face.surprise_likelihood]))
-        print("Headwear likelyhood:  {0}".
-              format(likelihood[face.headwear_likelihood]))
+        print(f"Detection Confidence: {face.detection_confidence}")
+        print(f"Angry likelyhood: {likelihood[face.anger_likelihood]}")
+        print(f"Joy likelyhood: {likelihood[face.joy_likelihood]}")
+        print(f"Sorrow likelyhood: {likelihood[face.sorrow_likelihood]}")
+        print(f"Surprise likelyhood: {likelihood[face.surprise_likelihood]}")
+        print(f"Headwear likelyhood: {likelihood[face.headwear_likelihood]}")
 
 
 def trigger_event(event, context):
