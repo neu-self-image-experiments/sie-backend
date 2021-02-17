@@ -11,7 +11,7 @@ from google.cloud import storage
 
 def face_detection(uri):
     """
-    This function detects the faces in the file 
+    This function detects the faces in the file
     located in Google Cloud Storage or the web
     Args:
         uri: the file located in Google Cloud Storage or the web
@@ -44,16 +44,18 @@ def face_detection(uri):
     )
 
     for face in faceAnnotations:
-        print("Detection Confidence:  {0}".format(face.detection_confidence))
-        print("Angry likelyhood:  {0}".format(
-            likelihood[face.anger_likelihood]))
-        print("Joy likelyhood:  {0}".format(likelihood[face.joy_likelihood]))
-        print("Sorrow likelyhood:  {0}".format(
-            likelihood[face.sorrow_likelihood]))
-        print("Surprise likelyhood:  {0}".format(
-            likelihood[face.surprise_likelihood]))
-        print("Headwear likelyhood:  {0}".format(
-            likelihood[face.headwear_likelihood]))
+        print("Detection Confidence:  {0}".
+              format(face.detection_confidence))
+        print("Angry likelyhood:  {0}"
+              .format(likelihood[face.anger_likelihood]))
+        print("Joy likelyhood:  {0}".
+              format(likelihood[face.joy_likelihood]))
+        print("Sorrow likelyhood:  {0}".
+              format(likelihood[face.sorrow_likelihood]))
+        print("Surprise likelyhood:  {0}".
+              format(likelihood[face.surprise_likelihood]))
+        print("Headwear likelyhood:  {0}".
+              format(likelihood[face.headwear_likelihood]))
 
 
 def trigger_event(event, context):
