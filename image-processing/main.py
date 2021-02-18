@@ -5,7 +5,51 @@
 # Then runs the provided R-script to generate processed images
 
 import os
+from google.cloud import vision
 from google.cloud import storage
+
+
+def face_detection(uri):
+    """
+    This function detects the faces in the file
+    located in Google Cloud Storage or the web
+    Args:
+        uri: the file located in Google Cloud Storage or the web
+    returns:
+        None: Prints the likelihood of the face expressions
+        or returns an errors resonse in string format
+    """
+    vision_client = vision.ImageAnnotatorClient()
+    print(vision_client)
+
+    image = vision.Image()
+    image.source.image_uri = uri
+
+    response = vision_client.face_detection(image=image)
+    faceAnnotations = response.face_annotations
+
+    # Making sure that there's only one person in the frame
+    if len(faceAnnotations) != 1:
+        return "Please ensure exactly ONE face is in the image."
+
+    # Lables of likelihood from google.cloud.vision.enums
+
+    likelihood = (
+        "unknown",
+        "Very unlikely",
+        "Unlikely",
+        "Possibly",
+        "Likely",
+        "Very likely",
+    )
+
+    for face in faceAnnotations:
+        print(f"Detection Confidence: {face.detection_confidence}")
+        print(f"Angry likelyhood: {likelihood[face.anger_likelihood]}")
+        print(f"Joy likelyhood: {likelihood[face.joy_likelihood]}")
+        print(f"Sorrow likelyhood: {likelihood[face.sorrow_likelihood]}")
+        print(f"Surprise likelyhood: {likelihood[face.surprise_likelihood]}")
+        print(f"Headwear likelyhood: {likelihood[face.headwear_likelihood]}")
 
 
 def trigger_event(event, context):
@@ -30,7 +74,9 @@ def trigger_event(event, context):
     try:
         download_image(bucket_name, source_img, tmp_download_path)
         print(f"Image {source_img} downloaded to {tmp_download_path}")
-        # TODO(abi) call cloud vision API with this image
+        # currenlty this makes sure there's one person
+        # in the frame and prints a few other details
+        face_detection(tmp_download_path)
         # TODO(jerry) call R script with features returned from Abi's part
         # TODO(hantao) put processed images to `sie-processed-images` bucket
     except Exception:
@@ -63,3 +109,24 @@ def download_image(bucket_name, source_blob_name, destination_file_name):
     # using `Bucket.blob` is preferred here.
     blob = bucket.blob(source_blob_name)
     blob.download_to_filename(destination_file_name)
+
+
+def upload_processed_images(bucket_name, source_file_folder):
+    """Uploads images to the bucket.
+    Args:
+        bucket_name = "your-bucket-name"
+        source_file_folder = Path to the folder that contains
+                                all the processed images
+
+    Returns:
+        None;
+    """
+
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(bucket_name)
+
+    for file_name in os.listdir(source_file_folder):
+        blob = bucket.blob(file_name)
+        blob.upload_from_filename(os.path.join(source_file_folder, file_name))
+
+        print("File {} uploaded to {}.".format(file_name, bucket_name))
