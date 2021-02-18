@@ -1,3 +1,4 @@
 Flask==1.0.2
 functions-framework==2.1.0
 google-cloud-storage
+google-cloud-vision==2.2.0
