@@ -7,12 +7,11 @@
 import os
 import cv2
 import requests
-import urllib
 import numpy as np
 
 from google.cloud import vision
 from google.cloud import storage
-from flask import Response
+
 
 def face_check(face):
 
@@ -21,8 +20,12 @@ def face_check(face):
     BLURRY_THRESHOLD = 2
     ANGLE_THRESHOLD = 10.0
 
-    if face.joy_likelihood > EMOTION_THRESHOLD or face.anger_likelihood > EMOTION_THRESHOLD or \
-            face.surprise_likelihood > EMOTION_THRESHOLD or face.sorrow_likelihood > EMOTION_THRESHOLD:
+    if (
+        face.joy_likelihood > EMOTION_THRESHOLD
+        or face.anger_likelihood > EMOTION_THRESHOLD
+        or face.surprise_likelihood > EMOTION_THRESHOLD
+        or face.sorrow_likelihood > EMOTION_THRESHOLD
+    ):
         return "Please make sure your image has neutral facial expression."
 
     if face.under_exposed_likelihood > LIGHTING_THRESHOLD:
@@ -31,9 +34,14 @@ def face_check(face):
     if face.blurred_likelihood > BLURRY_THRESHOLD:
         return "Please make sure your image is clear."
 
-    if face.roll_angle < -ANGLE_THRESHOLD or face.roll_angle > ANGLE_THRESHOLD or \
-            face.pan_angle < -ANGLE_THRESHOLD or face.pan_angle > ANGLE_THRESHOLD or \
-            face.tilt_angle < -ANGLE_THRESHOLD or face.tilt_angle > ANGLE_THRESHOLD:
+    if (
+        face.roll_angle < -ANGLE_THRESHOLD
+        or face.roll_angle > ANGLE_THRESHOLD
+        or face.pan_angle < -ANGLE_THRESHOLD
+        or face.pan_angle > ANGLE_THRESHOLD
+        or face.tilt_angle < -ANGLE_THRESHOLD
+        or face.tilt_angle > ANGLE_THRESHOLD
+    ):
         return "Please face straight towards your camera, avoid tiliting."
 
     return "Success"
@@ -52,7 +60,7 @@ def face_detection(uri):
     vision_client = vision.ImageAnnotatorClient()
 
     image = vision.Image()
-    image.source.image_uri = uri 
+    image.source.image_uri = uri
 
     response = vision_client.face_detection(image=image)
 
@@ -83,7 +91,7 @@ def face_detection(uri):
     RIGHT_EAR = 28
     CHIN_BOTTOM = 32
     for vertex in face.bounding_poly.vertices:
-            vertices_list.append((vertex.x, vertex.y))
+        vertices_list.append((vertex.x, vertex.y))
 
     for landmark in face.landmarks:
         if landmark.type_ == MID_EYES:
@@ -93,22 +101,50 @@ def face_detection(uri):
         elif landmark.type_ == LEFT_EAR:
             left_ear = (int(landmark.position.x), int(landmark.position.y))
         elif landmark.type_ == RIGHT_EAR:
-            right_ear = (int(landmark.position.x),
-                         int(landmark.position.y))
+            right_ear = (int(landmark.position.x), int(landmark.position.y))
         elif landmark.type_ == CHIN_BOTTOM:
             chin = (int(landmark.position.x), int(landmark.position.y))
 
-    if mid_eyes == (0, 0) or nose == (0, 0) or left_ear == (0, 0) or right_ear == (0, 0) or chin == (0, 0):
-        return "Please ensure your full face is visible in the image, including both ears."
+    if (
+        mid_eyes == (0, 0)
+        or nose == (0, 0)
+        or left_ear == (0, 0)
+        or right_ear == (0, 0)
+        or chin == (0, 0)
+    ):
+        return "Please ensure your full face is visible in the image, \
+            including both ears."
 
-    return vertices_list[0][0], vertices_list[0][1], vertices_list[2][0], vertices_list[2][1], mid_eyes, nose, left_ear, right_ear, chin
+    return (
+        vertices_list[0][0],
+        vertices_list[0][1],
+        vertices_list[2][0],
+        vertices_list[2][1],
+        mid_eyes,
+        nose,
+        left_ear,
+        right_ear,
+        chin,
+    )
 
-def process_img(path, top_left_x, top_left_y, bottom_right_x, bottom_right_y, mid_eyes, nose, left_ear, right_ear, chin):
+
+def process_img(
+    path,
+    top_left_x,
+    top_left_y,
+    bottom_right_x,
+    bottom_right_y,
+    mid_eyes,
+    nose,
+    left_ear,
+    right_ear,
+    chin,
+):
     """
-    This function is used to process a valid image. Processing steps are: 
+    This function is used to process a valid image. Processing steps are:
     masking, croping, grayscale, resize
     Args:
-        top_left_x: top left x-coord of face bounding polygon 
+        top_left_x: top left x-coord of face bounding polygon
         top_left_y: top left y-coord of face bounding polygon
         bottom_right_x: bottom right x-coord of face bounding polygon
         bottom_right_y: bottom right y-coord of face bounding polygon
@@ -120,11 +156,13 @@ def process_img(path, top_left_x, top_left_y, bottom_right_x, bottom_right_y, mi
     returns:
         str: file path of the processed image
     """
-    
+
     img = cv2.imread(path)
-    
+
     # create mask
-    mask = create_mask(img.shape[0], img.shape[1], mid_eyes, nose, left_ear, right_ear, chin)
+    mask = create_mask(
+        img.shape[0], img.shape[1], mid_eyes, nose, left_ear, right_ear, chin
+    )
 
     # apply mask
     masked_img = cv2.bitwise_and(img, mask)
@@ -141,17 +179,22 @@ def process_img(path, top_left_x, top_left_y, bottom_right_x, bottom_right_y, mi
         top_left_y = int(top_left_y) - int(make_square)
         bottom_right_y = int(bottom_right_y) + int(make_square)
 
-
     # Make the background color grey
-    crop_img = masked_img[top_left_y:bottom_right_y, top_left_x:bottom_right_x].copy()
-    crop_img[np.where((crop_img==[0,0,0]).all(axis=2))] = [140, 141, 137]
+
+    # naive fix for linting error: line getting to long ->
+    top_lt_y = top_left_y
+    top_lt_x = top_left_x
+    btm_rt_y = bottom_right_y
+    btm_rt_x = bottom_right_x
+    crop_img = masked_img[top_lt_y:btm_rt_y, top_lt_x:btm_rt_x].copy()
+    crop_img[np.where((crop_img == [0, 0, 0]).all(axis=2))] = [140, 141, 137]
 
     # Convert to Grayscale
     gray_img = cv2.cvtColor(crop_img, cv2.COLOR_BGR2GRAY)
-    
+
     # resize
     final_img = resize(gray_img)
-    
+
     # Save processed image to local
     path = os.getcwd() + "/temp/"
     savename = path + "neutral.jpg"
@@ -159,9 +202,11 @@ def process_img(path, top_left_x, top_left_y, bottom_right_x, bottom_right_y, mi
     print("Processed image saved at " + savename)
     return savename
 
+
 def create_mask(height, width, mid_eyes, nose, left_ear, right_ear, chin):
     """
-    This function is used to create mask given the coordinates of face attributes
+    This function is used to create mask given the coordinates
+    of face attributes
     Args:
         height: height of the image
         width: width of the image
@@ -174,27 +219,39 @@ def create_mask(height, width, mid_eyes, nose, left_ear, right_ear, chin):
         numpy.ndarray: data containing the masked image
     """
     mask = np.zeros((height, width, 3), np.uint8)
-    
+
     center_x = nose[0]
     center_y = int((nose[1] - mid_eyes[1]) / 2 + mid_eyes[1])
     center_coordinates = (center_x, center_y)
-    axesLength = (int((right_ear[0] - left_ear[0]) // 2 * 1), int((chin[1] - center_y) * 1.05)) 
+    axesLength = (
+        int((right_ear[0] - left_ear[0]) // 2 * 1),
+        int((chin[1] - center_y) * 1.05),
+    )
     angle = 0
     startAngle = 0
     endAngle = 360
-   
-    # White color in BGR 
-    color = (255, 255, 255) 
-   
-    # Line thickness 
+
+    # White color in BGR
+    color = (255, 255, 255)
+
+    # Line thickness
     thickness = -1
-    
-    # Using cv2.ellipse() method 
+
+    # Using cv2.ellipse() method
     # Draw a solid ellipse
-    mask = cv2.ellipse(mask, center_coordinates, axesLength, 
-            angle, startAngle, endAngle, color, thickness)
+    mask = cv2.ellipse(
+        mask,
+        center_coordinates,
+        axesLength,
+        angle,
+        startAngle,
+        endAngle,
+        color,
+        thickness,
+    )
 
     return mask
+
 
 def resize(image):
     """
@@ -214,51 +271,73 @@ def resize(image):
     else:
         return None
 
+
 def detect_and_process(uri):
     """
-    This is a mock function to test the functionality of our image 
+    This is a mock function to test the functionality of our image
     processing pipeline without using Google Storage Bucket. In other
     words, we want the below functionality implemented in trigger_event()
     function later on.
 
-    Currently the images are stored in /temp directory as ori.jpg (raw) and 
+    Currently the images are stored in /temp directory as ori.jpg (raw) and
     neutral.jpg (processed) instead of GStorageBuckets.
     Args:
-        uri: URI of the source image 
+        uri: URI of the source image
     returns:
         str: Error or Success message
     """
 
     # parse the image url from the uri
-    # Example URI when testing locally: 
+    # Example URI when testing locally:
     # http://localhost:${FUNCTION_PORT_HTTP}/?subject=https://images.pexels.com/
     # photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940
-    url = uri.args.get('subject')
+    url = uri.args.get("subject")
     results = face_detection(url)
 
     # temp directory to store images
-    if not os.path.exists('temp'):
-        os.makedirs('temp')
+    if not os.path.exists("temp"):
+        os.makedirs("temp")
     TEMP_DIR = os.getcwd() + "/temp/"
     download_to = TEMP_DIR + "ori.jpg"
 
-    # any error 
+    # any error
     if results == str:
         return results
-    else:  
+    else:
         # valid face
-        topLeft_x, topLeft_y, bottomRight_x, bottomRight_y = results[0], results[1], results[2], results[3]
-        mid_eyes, nose, left_ear, right_ear, chin = results[4], results[5], results[6], results[7], results[8]
-    
+        topLeft_x, topLeft_y, bottomRight_x, bottomRight_y = (
+            results[0],
+            results[1],
+            results[2],
+            results[3],
+        )
+        mid_eyes, nose, left_ear, right_ear, chin = (
+            results[4],
+            results[5],
+            results[6],
+            results[7],
+            results[8],
+        )
+
     # download the image into the temp directory
     data_downloaded = requests.get(url)
-    with open(download_to, 'wb') as outfile:
+    with open(download_to, "wb") as outfile:
         outfile.write(data_downloaded.content)
 
-    process_img(download_to, topLeft_x, topLeft_y, bottomRight_x, bottomRight_y, mid_eyes, nose, left_ear, right_ear, chin)
+    process_img(
+        download_to,
+        topLeft_x,
+        topLeft_y,
+        bottomRight_x,
+        bottomRight_y,
+        mid_eyes,
+        nose,
+        left_ear,
+        right_ear,
+        chin,
+    )
 
     return "Processed"
-
 
 
 def trigger_event(event, context):
