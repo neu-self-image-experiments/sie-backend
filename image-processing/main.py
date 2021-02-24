@@ -12,39 +12,47 @@ import numpy as np
 from google.cloud import vision
 from google.cloud import storage
 
+import constants
+import exceptions
+
 
 def face_check(face):
+    """
+    The function validates the face expression and quality of the image.
+    Args:
+        face: face_annotations return by Google Vision API
+    returns:
+        bool: True if valid, otherwise raises InvalidFaceImage exception
+    """
+    if (
+        face.joy_likelihood > constants.EMOTION_THRESHOLD
+        or face.anger_likelihood > constants.EMOTION_THRESHOLD
+        or face.surprise_likelihood > constants.EMOTION_THRESHOLD
+        or face.sorrow_likelihood > constants.EMOTION_THRESHOLD
+    ):
+        raise exceptions.InvalidFaceImage(
+            "Please make sure your image has neutral facial expression."
+        )
 
-    EMOTION_THRESHOLD = 3
-    LIGHTING_THRESHOLD = 3
-    BLURRY_THRESHOLD = 2
-    ANGLE_THRESHOLD = 10.0
+    if face.under_exposed_likelihood > constants.LIGHTING_THRESHOLD:
+        raise exceptions.InvalidFaceImage("Please make sure your image is well-lit.")
+
+    if face.blurred_likelihood > constants.BLURRY_THRESHOLD:
+        raise exceptions.InvalidFaceImage("Please make sure your image is clear.")
 
     if (
-        face.joy_likelihood > EMOTION_THRESHOLD
-        or face.anger_likelihood > EMOTION_THRESHOLD
-        or face.surprise_likelihood > EMOTION_THRESHOLD
-        or face.sorrow_likelihood > EMOTION_THRESHOLD
+        face.roll_angle < -constants.ANGLE_THRESHOLD
+        or face.roll_angle > constants.ANGLE_THRESHOLD
+        or face.pan_angle < -constants.ANGLE_THRESHOLD
+        or face.pan_angle > constants.ANGLE_THRESHOLD
+        or face.tilt_angle < -constants.ANGLE_THRESHOLD
+        or face.tilt_angle > constants.ANGLE_THRESHOLD
     ):
-        return "Please make sure your image has neutral facial expression."
+        raise exceptions.InvalidFaceImage(
+            "Please face straight towards your camera, avoid tiliting."
+        )
 
-    if face.under_exposed_likelihood > LIGHTING_THRESHOLD:
-        return "Please make sure your image is well-lit."
-
-    if face.blurred_likelihood > BLURRY_THRESHOLD:
-        return "Please make sure your image is clear."
-
-    if (
-        face.roll_angle < -ANGLE_THRESHOLD
-        or face.roll_angle > ANGLE_THRESHOLD
-        or face.pan_angle < -ANGLE_THRESHOLD
-        or face.pan_angle > ANGLE_THRESHOLD
-        or face.tilt_angle < -ANGLE_THRESHOLD
-        or face.tilt_angle > ANGLE_THRESHOLD
-    ):
-        return "Please face straight towards your camera, avoid tiliting."
-
-    return "Success"
+    return True
 
 
 def face_detection(uri):
@@ -68,14 +76,13 @@ def face_detection(uri):
 
     # Making sure that there's only one person in the frame
     if len(faceAnnotations) != 1:
-        return "Please ensure exactly ONE face is in the image."
+        raise exceptions.InvalidFaceImage(
+            "Please ensure exactly ONE face is in the image."
+        )
 
     face = faceAnnotations[0]
 
-    result = face_check(face)
-
-    if result != "Success":
-        return result
+    face_check(face)
 
     vertices_list = []
 
@@ -85,24 +92,19 @@ def face_detection(uri):
     right_ear = (0, 0)
     chin = (0, 0)
 
-    MID_EYES = 7
-    NOSE_TIP = 8
-    LEFT_EAR = 27
-    RIGHT_EAR = 28
-    CHIN_BOTTOM = 32
     for vertex in face.bounding_poly.vertices:
         vertices_list.append((vertex.x, vertex.y))
 
     for landmark in face.landmarks:
-        if landmark.type_ == MID_EYES:
+        if landmark.type_ == constants.MID_EYES:
             mid_eyes = (int(landmark.position.x), int(landmark.position.y))
-        elif landmark.type_ == NOSE_TIP:
+        elif landmark.type_ == constants.NOSE_TIP:
             nose = (int(landmark.position.x), int(landmark.position.y))
-        elif landmark.type_ == LEFT_EAR:
+        elif landmark.type_ == constants.LEFT_EAR:
             left_ear = (int(landmark.position.x), int(landmark.position.y))
-        elif landmark.type_ == RIGHT_EAR:
+        elif landmark.type_ == constants.RIGHT_EAR:
             right_ear = (int(landmark.position.x), int(landmark.position.y))
-        elif landmark.type_ == CHIN_BOTTOM:
+        elif landmark.type_ == constants.CHIN_BOTTOM:
             chin = (int(landmark.position.x), int(landmark.position.y))
 
     if (
@@ -112,8 +114,10 @@ def face_detection(uri):
         or right_ear == (0, 0)
         or chin == (0, 0)
     ):
-        return "Please ensure your full face is visible in the image, \
+        raise exceptions.InvalidFaceImage(
+            "Please ensure your full face is visible in the image, \
             including both ears."
+        )
 
     return (
         vertices_list[0][0],
@@ -182,11 +186,7 @@ def process_img(
     # Make the background color grey
 
     # naive fix for linting error: line getting to long ->
-    top_lt_y = top_left_y
-    top_lt_x = top_left_x
-    btm_rt_y = bottom_right_y
-    btm_rt_x = bottom_right_x
-    crop_img = masked_img[top_lt_y:btm_rt_y, top_lt_x:btm_rt_x].copy()
+    crop_img = masked_img[top_left_y:bottom_right_y, top_left_x:bottom_right_x].copy()
     crop_img[np.where((crop_img == [0, 0, 0]).all(axis=2))] = [140, 141, 137]
 
     # Convert to Grayscale
@@ -195,12 +195,13 @@ def process_img(
     # resize
     final_img = resize(gray_img)
 
-    # Save processed image to local
-    path = os.getcwd() + "/temp/"
-    savename = path + "neutral.jpg"
-    cv2.imwrite(savename, final_img)
-    print("Processed image saved at " + savename)
-    return savename
+    # Save processed image to local dir
+    processed_file_path = (
+        os.getcwd() + f"/{constants.TEMP_DIR}/{constants.PROCESSED_IMAGE}"
+    )
+    cv2.imwrite(processed_file_path, final_img)
+    print("Processed image saved at: " + processed_file_path)
+    return processed_file_path
 
 
 def create_mask(height, width, mid_eyes, nose, left_ear, right_ear, chin):
@@ -227,15 +228,6 @@ def create_mask(height, width, mid_eyes, nose, left_ear, right_ear, chin):
         int((right_ear[0] - left_ear[0]) // 2 * 1),
         int((chin[1] - center_y) * 1.05),
     )
-    angle = 0
-    startAngle = 0
-    endAngle = 360
-
-    # White color in BGR
-    color = (255, 255, 255)
-
-    # Line thickness
-    thickness = -1
 
     # Using cv2.ellipse() method
     # Draw a solid ellipse
@@ -243,11 +235,11 @@ def create_mask(height, width, mid_eyes, nose, left_ear, right_ear, chin):
         mask,
         center_coordinates,
         axesLength,
-        angle,
-        startAngle,
-        endAngle,
-        color,
-        thickness,
+        constants.ANGLE,
+        constants.START_ANGLE,
+        constants.END_ANGLE,
+        constants.WHT_COLOR,
+        constants.THICKNESS,
     )
 
     return mask
@@ -292,13 +284,16 @@ def detect_and_process(uri):
     # http://localhost:${FUNCTION_PORT_HTTP}/?subject=https://images.pexels.com/
     # photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940
     url = uri.args.get("subject")
-    results = face_detection(url)
+
+    try:
+        results = face_detection(url)
+    except exceptions.InvalidFaceImage as err:
+        return str(err), 400
 
     # temp directory to store images
-    if not os.path.exists("temp"):
-        os.makedirs("temp")
-    TEMP_DIR = os.getcwd() + "/temp/"
-    download_to = TEMP_DIR + "ori.jpg"
+    if not os.path.exists(constants.TEMP_DIR):
+        os.makedirs(constants.TEMP_DIR)
+    download_to = os.getcwd() + f"/{constants.TEMP_DIR}/{constants.SOURCE_IMAGE}"
 
     # any error
     if results == str:
@@ -324,20 +319,23 @@ def detect_and_process(uri):
     with open(download_to, "wb") as outfile:
         outfile.write(data_downloaded.content)
 
-    process_img(
-        download_to,
-        topLeft_x,
-        topLeft_y,
-        bottomRight_x,
-        bottomRight_y,
-        mid_eyes,
-        nose,
-        left_ear,
-        right_ear,
-        chin,
-    )
+    try:
+        process_img(
+            download_to,
+            topLeft_x,
+            topLeft_y,
+            bottomRight_x,
+            bottomRight_y,
+            mid_eyes,
+            nose,
+            left_ear,
+            right_ear,
+            chin,
+        )
+    except Exception as err:
+        return str(err), 500
 
-    return "Processed"
+    return "Processed Sucessfully!", 200
 
 
 def trigger_event(event, context):
