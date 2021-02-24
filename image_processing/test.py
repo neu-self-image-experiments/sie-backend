@@ -23,13 +23,14 @@ def test_upload_processed_images(request):
 
     # Iterate through the files inside the folder
     for file_name in os.listdir(source_file_folder):
-        blob = bucket.blob(file_name)
         # Aessert if the blob exist in the bucket
-        assert storage.Blob(bucket=bucket, name=file_name).exists(storage_client) == True
+        assert (storage.Blob(bucket=bucket, name=file_name)
+                .exists(storage_client) is True)
         # You can use print to see if the assertion is correct
 
     # Make a falsy test to ensure that it returns false
-    assert storage.Blob(bucket=bucket, name="Falsy_test").exists(storage_client) == False
+    assert (storage.Blob(bucket=bucket, name="Falsy_test")
+            .exists(storage_client) is False)
 
     # If all assertions passed, then return test pass
     return "Test passed"
