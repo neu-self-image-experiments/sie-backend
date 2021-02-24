@@ -102,7 +102,7 @@ For more information regarding writing a unit test, please follow the guidlines 
 
 You can run your test with following commmand (Please make sure you are in the right directory)
 ```
-functions-framework --source=test.py --target=THE_NAME_FOR_YOUR_FUNCTION
+functions-framework --source=test.py --target=THE_NAME_FOR_UNIT_TEST_FUNCTION
 ```
 
 ### Sending a HTTP request
