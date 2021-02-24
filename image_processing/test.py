@@ -19,10 +19,5 @@ def test_upload_processed_images(request):
         blob = bucket.blob(file_name)
         if not blob.exist():
             return "Test fail, upload unsuccessful"
-    
+
     return "Test passed"
-    # except Exception:
-    #     return "Exception is thrown, check 
-    #       the parameter that are passed into the function"
-    # finally:
-    #     return "Test passed"
