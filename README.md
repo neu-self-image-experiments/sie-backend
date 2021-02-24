@@ -85,6 +85,33 @@ Try to keep your PR short since it will be faster and easier for the reviewer to
 
 Reviewers are expected to actually take time to inspect the reviewee's work and flag any potential issue and/or oversight included in the branch. Similarly reviewees are expected to aknowledge any feedback and make adjustments accordingly. Since the PR might be acting as a blocker for other team members, please be mindful and do code reviews as soon as possible (ideally within 24 hours).
 
+## Test Guidelines
+
+### Install functions-framework
+Please write unit tests into the target function's folder and name it test.py. If test.py already exist, just add your unit tests into the file. 
+
+In order to do unit test, functions-framework should be installed initally. You can run the following command to install functions-framework
+```
+pip install functions-framework
+```
+
+For more information regarding functions-framework please refer to here: https://github.com/GoogleCloudPlatform/functions-framework-python
+
+### Creating your unit test
+For more information regarding writing a unit test, please follow the guidlines on Testing HTTP Functions for unit test: https://cloud.google.com/functions/docs/testing/test-http#unit_tests
+
+You can run your test with following commmand (Please make sure you are in the right directory)
+```
+functions-framework --source=test.py --target=THE_NAME_FOR_UNIT_TEST_FUNCTION
+```
+
+### Sending a HTTP request
+Finally, make a HTTP request to default address http://0.0.0.0:8080 via Postman. You can also send parameter with a HTTP request.
+
+For more information about how to use Postman or how to pass paramter with a HTTP request via Postman, please refer to: https://learning.postman.com/docs/sending-requests/requests/
+
+<hr>
+
 ## Quick Links
 
 JIRA board: [here](https://cs6510.atlassian.net/secure/RapidBoard.jspa?rapidView=4&projectKey=SIE&selectedIssue=SIE-5)
