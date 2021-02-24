@@ -87,15 +87,17 @@ Reviewers are expected to actually take time to inspect the reviewee's work and 
 
 ## Test Guidelines
 
-### Install functions-framework
+### Prerequisite
 Please write unit tests into the target function's folder and name it test.py. If test.py already exist, just add your unit tests into the file. 
 
-In order to do unit test, functions-framework should be installed initally. You can run the following command to install functions-framework
+In order to do the unit test, functions-framework should be installed initally. You can run the following command to install functions-framework
 ```
 pip install functions-framework
 ```
 
-For more information regarding functions-framework please refer to here: https://github.com/GoogleCloudPlatform/functions-framework-python
+For more information regarding functions-framework please refer to: https://github.com/GoogleCloudPlatform/functions-framework-python
+
+Also, please make sure you already have a credential file inside env/ folder. For setting environment variable please refer to: https://cloud.google.com/docs/authentication/getting-started#setting_the_environment_variable
 
 ### Creating your unit test
 For more information regarding writing a unit test, please follow the guidlines on Testing HTTP Functions for unit test: https://cloud.google.com/functions/docs/testing/test-http#unit_tests
