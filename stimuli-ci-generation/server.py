@@ -16,7 +16,7 @@ app = Flask(__name__)
 
 # upload a file to google cloud storage
 def upload_file(file_name, bucket_name):
-    upload_destination = file_name[(len(bucket_name) + 1) :]
+    upload_destination = file_name[(len(bucket_name) + 1):]
     print("upload destination: {}".format(upload_destination), file=sys.stderr)
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
@@ -58,10 +58,7 @@ def create_bucket_folder(bucket_name):
         os.makedirs(bucket_name)
     except OSError as exc:
         print("Creation of the directory %s failed" % bucket_name)
-        print(
-            f"Creation of the directory {bucket_name} failed",
-            file=sys.stderr
-        )
+        print(f"Creation of the directory {bucket_name} failed", file=sys.stderr)
         if exc.errno != errno.EEXIST:
             raise
     else:
@@ -98,9 +95,7 @@ def generate_ci():
     create_bucket_folder(bucket_name)
     download_file(USER_SELECTION, bucket_name)
     download_folder("stimuli", bucket_name)
-    subprocess.check_call(
-        ["Rscript", "generate_ci.R", bucket_name], shell=False
-    )
+    subprocess.check_call(["Rscript", "generate_ci.R", bucket_name], shell=False)
     files = glob.glob(bucket_name + "/cis/*.jpg")
     uploaded = "emtpy item"
     for f in files:

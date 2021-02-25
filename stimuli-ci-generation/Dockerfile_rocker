@@ -1,12 +1,7 @@
-# Base image: installs R packages
-# please tag this image with "sie-base"
-#
 # FROM rocker/tidyverse:3.6.3 
 FROM rocker/r-ver:4.0.0
 
 RUN apt-get install -y libjpeg-dev
-
-# Download and install packages
 RUN Rscript -e "install.packages('jpeg')"
 RUN Rscript -e "install.packages('latticeExtra')"
 RUN Rscript -e "install.packages('Hmisc')"

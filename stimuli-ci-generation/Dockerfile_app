@@ -1,0 +1,11 @@
+FROM si_rocker_2
+
+
+WORKDIR /app
+
+COPY . /app
+
+EXPOSE 8080
+
+
+ENTRYPOINT ["python3", "server.py"] 
