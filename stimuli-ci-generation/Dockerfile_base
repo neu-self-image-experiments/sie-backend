@@ -1,4 +1,4 @@
-FROM si_rocker_1
+FROM stimuli_ci_rocker
 
 RUN apt-get update 
 

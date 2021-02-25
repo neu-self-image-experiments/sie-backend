@@ -1,4 +1,4 @@
-FROM si_rocker_2
+FROM stimuli_ci_base
 
 
 WORKDIR /app
