@@ -279,26 +279,19 @@ def detect_and_process(uri):
         str: Error or Success message
     """
 
-    # parse the image url from the uri
-    # Example URI when testing locally:
-    # http://localhost:${FUNCTION_PORT_HTTP}/?subject=https://images.pexels.com/
-    # photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940
-    url = uri.args.get("subject")
-
     try:
+        # parse the image url from the uri
+        # Example URI when testing locally:
+        # http://localhost:${FUNCTION_PORT_HTTP}/?subject=https://images.pexels.com/
+        # photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940
+        url = uri.args.get("subject")
+
         results = face_detection(url)
-    except exceptions.InvalidFaceImage as err:
-        return str(err), 400
+        # temp directory to store images
+        if not os.path.exists(constants.TEMP_DIR):
+            os.makedirs(constants.TEMP_DIR)
+        download_to = os.getcwd() + f"/{constants.TEMP_DIR}/{constants.SOURCE_IMAGE}"
 
-    # temp directory to store images
-    if not os.path.exists(constants.TEMP_DIR):
-        os.makedirs(constants.TEMP_DIR)
-    download_to = os.getcwd() + f"/{constants.TEMP_DIR}/{constants.SOURCE_IMAGE}"
-
-    # any error
-    if results == str:
-        return results
-    else:
         # valid face
         topLeft_x, topLeft_y, bottomRight_x, bottomRight_y = (
             results[0],
@@ -314,12 +307,11 @@ def detect_and_process(uri):
             results[8],
         )
 
-    # download the image into the temp directory
-    data_downloaded = requests.get(url)
-    with open(download_to, "wb") as outfile:
-        outfile.write(data_downloaded.content)
+        # download the image into the temp directory
+        data_downloaded = requests.get(url)
+        with open(download_to, "wb") as outfile:
+            outfile.write(data_downloaded.content)
 
-    try:
         process_img(
             download_to,
             topLeft_x,
@@ -332,6 +324,9 @@ def detect_and_process(uri):
             right_ear,
             chin,
         )
+
+    except exceptions.InvalidFaceImage as err:
+        return str(err), 400
     except Exception as err:
         return str(err), 500
 
