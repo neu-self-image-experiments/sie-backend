@@ -112,7 +112,10 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-.DS_Store
+.DS_Store/
+scripts/
+temp/
+.vscode/
 
 # Spyder project settings
 .spyderproject
@@ -140,4 +143,3 @@ cython_debug/s
 
 # IDE locale
 .vscode/*
-
