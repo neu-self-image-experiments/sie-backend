@@ -16,7 +16,7 @@ app = Flask(__name__)
 
 # upload a file to google cloud storage
 def upload_file(file_name, bucket_name):
-    upload_destination = file_name[(len(bucket_name) + 1):]
+    upload_destination = file_name[(len(bucket_name) + 1) :]
     print("upload destination: {}".format(upload_destination), file=sys.stderr)
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
