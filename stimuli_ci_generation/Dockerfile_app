@@ -1,6 +1,5 @@
 FROM stimuli_ci_base
 
-
 WORKDIR /app
 
 COPY . /app
