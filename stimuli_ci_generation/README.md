@@ -20,16 +20,23 @@ Containers must be built in the following order and use the correct tags:
 - Docker tag: `stimuli_ci_app`
 
 # How to build
-* Locally: 
- - run the build_local.sh script.
+- Locally: 
+  - run the build_local.sh script.
 
-* Google Cloud Build
- - to be added
+- Google Cloud Build
+  - to be added
 
- # How to deploy
- * Google Cloud Run
+# How to deploy
+- Google Cloud Run
   - Register the built image
- `docker push gcr.io/[gcp-project-name]/stimuli_ci_app`
-  - Lunch cloud run instance from image: 
- `gcloud run deploy sie-stimuli-ci --image gcr.io/[gcp-project-name]/stimuli_ci_app --region northamerica-northeast1 docker run -t -d -p 16502:8080 -v`
+    ```
+    docker push gcr.io/[gcp-project-name]/stimuli_ci_app
+    ```
+  - Launch cloud run instance from image: 
+    ```
+    gcloud run deploy sie-stimuli-ci \
+    --image gcr.io/[gcp-project-name]/stimuli_ci_app \
+    --region northamerica-northeast1 \
+    docker run -t -d -p 16502:8080 -v
+    ```
 
