@@ -1,4 +1,3 @@
-import shutil
 import os
 
 
@@ -20,5 +19,5 @@ def mkdir(participant_id, *args):
         os.makedirs(tmp_dir, exist_ok=True)  # suppressed FileExistsError
     except OSError:
         print("Directory '%s' can not be created" % tmp_dir)
-    
+
     return tmp_dir
