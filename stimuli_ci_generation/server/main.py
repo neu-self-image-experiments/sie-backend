@@ -29,7 +29,6 @@ def index():
     # Decode the Pub/Sub message.
     pubsub_message = envelope["message"]
 
-    name = "World"
     if isinstance(pubsub_message, dict) and "data" in pubsub_message:
         try:
             data = json.loads(base64.b64decode(pubsub_message["data"]).decode())
@@ -42,7 +41,7 @@ def index():
             print(f"error: {e}")
             return f"Bad Request: {msg}", 400
 
-              # Validate the message is a Cloud Storage event.
+            # Validate the message is a Cloud Storage event.
         if not data["name"] or not data["bucket"]:
             msg = (
                 "Invalid Cloud Storage notification: "
@@ -53,9 +52,11 @@ def index():
 
         print(data)
         print(data["name"])
-        print(data["bucket"])    
+        print(data["bucket"])
 
     return ("", 204)
+
+
 # [END eventarc_gcs_handler]
 
 
