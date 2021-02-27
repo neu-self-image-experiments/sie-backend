@@ -1,8 +1,0 @@
-FROM selfimage-r-base:latest
-
-
-EXPOSE 8080
-
-COPY . /app
-
-ENTRYPOINT ["python3", "server.py"] 
