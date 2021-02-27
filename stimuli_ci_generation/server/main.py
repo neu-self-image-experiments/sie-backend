@@ -9,6 +9,10 @@ app = Flask(__name__)
 # [START eventarc_gcs_handler]
 @app.route("/", methods=["POST"])
 def storage_trigger_event():
+    """
+    Listens for storage event triggers and run image processing
+    """
+
     bucket = request.headers.get("ce-subject")
     print(f"Detected change in Cloud Storage bucket: {bucket}")
     # TODO(qhoang)

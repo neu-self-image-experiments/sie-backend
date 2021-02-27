@@ -11,7 +11,15 @@ USER_SELECTION_BUCKET = "sie-results"
 
 
 def generate_stimuli(img_file_path, participant_id):
-    # run stimuli generation and save processed images for experiment
+    """
+    Run stimuli generation and save processed images for experiment
+    Args:
+        img_file_path: downloaded image
+        participant_id: participant_id extracted from img filename
+
+    Returns:
+        None
+    """
 
     output_dir = mkdir(participant_id)
     subprocess.run(["Rscript", "generate_stimuli.R", output_dir], shell=False)
@@ -22,6 +30,15 @@ def generate_stimuli(img_file_path, participant_id):
 
 
 def generate_ci(participant_id):
+    """
+    Run ci and upload results to cloud storage
+    Args:
+        participant_id: participant_id extracted from img filename
+
+    Returns:
+        None
+    """
+
     output_dir = mkdir(participant_id)
     # download user_selection.csv to be used in generate_ci.R
     download_file(
