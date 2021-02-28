@@ -1,6 +1,7 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import subprocess
+import os
 
 from gcloud_services.cloud_storage import upload_files, download_file
 from util import mkdir
@@ -24,9 +25,13 @@ def generate_stimuli(img_file_path, participant_id):
 
     output_dir = mkdir(participant_id)
     stimuli_dir = mkdir(participant_id, "stimuli")
+    r_script_path = f"{os.getcwd()}/generate_stimuli.R"
+    print("r_script_path:", r_script_path)
 
     try:
-        subprocess.check_call(["Rscript", "generate_stimuli.R", output_dir], shell=False)
+        subprocess.check_call(
+            ["Rscript", "--vanilla", r_script_path, "--args", output_dir], shell=False
+        )
         bucket_name = f"{STIMULI_BUCKET}/{participant_id}"
         upload_files(bucket_name, stimuli_dir)
     except subprocess.CalledProcessError as err:
