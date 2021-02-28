@@ -4,7 +4,6 @@ from stimuli_ci_generation.gcloud_services import upload_files, download_file
 from stimuli_ci_generation.util import mkdir
 
 
-RAW_IMG_BUCKET = "sie-raw-images"
 STIMULI_BUCKET = "sie-stimuli"
 CI_BUCKET = "sie-classified-images"
 USER_SELECTION_BUCKET = "sie-results"
