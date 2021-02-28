@@ -24,7 +24,7 @@ def generate_stimuli(img_file_path, participant_id):
 
     output_dir = mkdir(participant_id)
     stimuli_dir = mkdir(participant_id, "stimuli")
-    
+
     try:
         subprocess.check_call(["Rscript generate_stimuli.R", output_dir], shell=True)
         bucket_name = f"{STIMULI_BUCKET}/{participant_id}"
@@ -58,4 +58,3 @@ def generate_ci(participant_id):
     except subprocess.CalledProcessError as err:
         print("Error running generate_ci.R")
         raise err
-    
