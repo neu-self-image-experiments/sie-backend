@@ -1,4 +1,4 @@
-FROM stimuli_ci_rocker
+FROM gcr.io/cs6510-spr2021/stimuli_ci_rocker
 
 RUN apt-get update 
 RUN apt-get install -y --no-install-recommends python3.7 
