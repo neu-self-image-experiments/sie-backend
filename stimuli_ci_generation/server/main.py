@@ -52,9 +52,11 @@ def index():
             print(f"error: {msg}")
             return f"Bad Request: {msg}", 400
 
-        file_name = data["name"] # file_name should be participant_id.jpg
-        participant_id = file_name.split('.')[0]
-        downloaded_path = download_file(RAW_IMG_BUCKET, file_name, mkdir(participant_id))
+        file_name = data["name"]  # file_name should be participant_id.jpg
+        participant_id = file_name.split(".")[0]
+        downloaded_path = download_file(
+            RAW_IMG_BUCKET, file_name, mkdir(participant_id)
+        )
         generate_stimuli(downloaded_path, participant_id)
 
         return ("Processing stimuli...", 204)
