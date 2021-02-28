@@ -1,7 +1,9 @@
+#!/usr/bin/env python
+
 import subprocess
 
-from stimuli_ci_generation.gcloud_services import upload_files, download_file
-from stimuli_ci_generation.util import mkdir
+from gcloud_services.cloud_storage import upload_files, download_file
+from util import mkdir
 
 
 STIMULI_BUCKET = "sie-stimuli"
@@ -21,9 +23,9 @@ def generate_stimuli(img_file_path, participant_id):
     """
 
     output_dir = mkdir(participant_id)
+    stimuli_dir = mkdir(output_dir, "stimuli")
     subprocess.run(["Rscript", "generate_stimuli.R", output_dir], shell=False)
 
-    stimuli_dir = f"{output_dir}/stimuli"
     bucket_name = f"{STIMULI_BUCKET}/{participant_id}"
     upload_files(bucket_name, stimuli_dir)
 

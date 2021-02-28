@@ -11,12 +11,13 @@ def mkdir(participant_id, *args):
         path to specified directory
     """
 
-    tmp_dir = f"/tmp/{participant_id}/"
+    tmp_dir = f"/tmp/{participant_id}"
     for nested_path in args:
-        tmp_dir += f"{nested_path}/"
+        tmp_dir += f"/{nested_path}"
 
     try:
         os.makedirs(tmp_dir, exist_ok=True)  # suppressed FileExistsError
+        print("Directory '%s' created" % tmp_dir)
     except OSError:
         print("Directory '%s' can not be created" % tmp_dir)
 

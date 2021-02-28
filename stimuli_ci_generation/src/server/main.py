@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from flask import Flask
 from flask import request
 
@@ -5,9 +7,9 @@ import os
 import base64
 import json
 
-from stimuli_ci_generation.gcloud_services.cloud_storage import download_file
-from stimuli_ci_generation.server.stimuli_ci import generate_stimuli
-from stimuli_ci_generation.util import mkdir
+from gcloud_services.cloud_storage import download_file
+# from server.stimuli_ci import generate_stimuli
+from util import mkdir
 
 RAW_IMG_BUCKET = "sie-raw-images"
 
@@ -53,11 +55,13 @@ def index():
             return f"Bad Request: {msg}", 400
 
         file_name = data["name"]  # file_name should be participant_id.jpg
+        print("file_name:", file_name)
         participant_id = file_name.split(".")[0]
         downloaded_path = download_file(
-            RAW_IMG_BUCKET, file_name, mkdir(participant_id)
+            RAW_IMG_BUCKET, file_name, f"{mkdir(participant_id)}/{file_name}"
         )
-        generate_stimuli(downloaded_path, participant_id)
+        print("downloaded_to:", downloaded_path)
+        # generate_stimuli(downloaded_path, participant_id)
 
         return ("Processing stimuli...", 204)
 

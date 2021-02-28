@@ -37,6 +37,9 @@ Containers must be built in the following order and use the correct tags:
     cd stimuli_ci_generation
     gcloud builds submit --config cloudbuild.yml .
 
+    // Or update stimuli_ci_app only
+    gcloud builds submit --config cloudbuild-update.yml .
+
     // Deploy docker container
     gcloud run deploy sie-image-processing --image gcr.io/$GCP_PROJECT/stimuli_ci_app:latest
 

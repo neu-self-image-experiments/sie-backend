@@ -23,6 +23,8 @@ def download_file(bucket_name, source_blob_name, destination_file_name):
     blob = bucket.blob(source_blob_name)
     blob.download_to_filename(destination_file_name)
 
+    return destination_file_name
+
 
 def upload_files(bucket_name, source_file_folder):
     """Uploads images to the bucket.

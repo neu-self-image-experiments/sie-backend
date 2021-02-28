@@ -5,7 +5,7 @@ ENV PYTHONUNBUFFERED True
 
 WORKDIR /app
 
-COPY . /app
+COPY src/ /app
 
 EXPOSE 8080
 
