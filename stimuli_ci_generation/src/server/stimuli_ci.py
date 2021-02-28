@@ -25,9 +25,7 @@ def generate_stimuli(img_file_path, participant_id):
 
     output_dir = mkdir(participant_id)
     # download masked image produced by face_detection cloud function
-    download_file(
-        f"{MASKED_BUCKET}/{participant_id}", "neutral.jpg", output_dir
-    )
+    download_file(f"{MASKED_BUCKET}/{participant_id}", "neutral.jpg", output_dir)
     stimuli_dir = mkdir(participant_id, "stimuli")
     r_script_path = f"{os.getcwd()}/generate_stimuli.R"
 
