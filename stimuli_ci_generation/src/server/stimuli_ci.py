@@ -26,11 +26,11 @@ def generate_stimuli(img_file_path, participant_id):
     stimuli_dir = mkdir(participant_id, "stimuli")
 
     try:
-        subprocess.check_call(["Rscript", "generate_stimuli.R", output_dir], shell=True)
+        subprocess.check_call(["Rscript", "generate_stimuli.R", output_dir], shell=False)
         bucket_name = f"{STIMULI_BUCKET}/{participant_id}"
         upload_files(bucket_name, stimuli_dir)
     except subprocess.CalledProcessError as err:
-        print("Error running generate_stimuli.R")
+        print("Error running generate_stimuli.R", err)
         raise err
 
 
@@ -53,7 +53,7 @@ def generate_ci(participant_id):
     )
 
     try:
-        subprocess.check_call(["Rscript", "generate_ci.R", output_dir], shell=True)
+        subprocess.check_call(["Rscript", "generate_ci.R", output_dir], shell=False)
         upload_files(ci_bucket, ci_dir)
     except subprocess.CalledProcessError as err:
         print("Error running generate_ci.R")
