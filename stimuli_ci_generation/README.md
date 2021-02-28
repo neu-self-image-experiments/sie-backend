@@ -30,13 +30,15 @@ Containers must be built in the following order and use the correct tags:
 - Google Cloud Run
     ```
     // Build docker images
-    GCP_PROJECT='cs6510-spr2021'
+    GCP_PROJECT=<GCP_PROJECT>
+    PROJECT_NUMBER=<PROJECT_NUMBER>
+    CLOUD_RUN_ENDPOINT=<CLOUD_RUN_ENDPOINT>
 
     cd stimuli_ci_generation
     gcloud builds submit --config cloudbuild.yml .
 
     // Deploy docker container
-    gcloud run deploy sie-image-processing --image gcr.io/cs6510-spr2021/stimuli_ci_app:latest
+    gcloud run deploy sie-image-processing --image gcr.io/$GCP_PROJECT/stimuli_ci_app:latest
 
     // select [1] Cloud Run (fully managed)
     // select [16] northamerica-northeast1 region
@@ -46,8 +48,8 @@ Containers must be built in the following order and use the correct tags:
     gcloud pubsub topics create sie-image-processing
 
     // Allow pub/sub to create authentication tokens in your project
-    gcloud projects add-iam-policy-binding cs6510-spr2021 \
-    --member=serviceAccount:service-796249853280@gcp-sa-pubsub.iam.gserviceaccount.com \
+    gcloud projects add-iam-policy-binding $GCP_PROJECT \
+    --member=serviceAccount:service-$PROJECT_NUMBER@gcp-sa-pubsub.iam.gserviceaccount.com \
     --role=roles/iam.serviceAccountTokenCreator
 
     // Create a service account for the subscription
@@ -55,14 +57,14 @@ Containers must be built in the following order and use the correct tags:
         --display-name "SIE Cloud Run Pub/Sub Invoker"
 
     gcloud run services add-iam-policy-binding sie-image-processing \
-    --member=serviceAccount:sie-cloud-run-pubsub-invoker@cs6510-spr2021.iam.gserviceaccount.com \
+    --member=serviceAccount:sie-cloud-run-pubsub-invoker@$GCP_PROJECT.iam.gserviceaccount.com \
     --role=roles/run.invoker
    
     // Create a pub/sub subscription with service account that you created with
     // the required permissions
     gcloud beta pubsub subscriptions create sie-cloud-run --topic sie-image-processing \
-    --push-endpoint=https://sie-image-processing-3xdegkwu5a-nn.a.run.app \
-    --push-auth-service-account=sie-cloud-run-pubsub-invoker@cs6510-spr2021.iam.gserviceaccount.com
+    --push-endpoint=$CLOUD_RUN_ENDPOINT \
+    --push-auth-service-account=sie-cloud-run-pubsub-invoker@$GCP_PROJECT.iam.gserviceaccount.com
 
     // Create a storage trigger that sends a message to cloud run
     gsutil notification create -t sie-image-processing -f json -e OBJECT_FINALIZE gs://sie-raw-images
