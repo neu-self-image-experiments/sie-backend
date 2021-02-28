@@ -1,3 +1,5 @@
+#! /usr/bin/Rscript --vanilla
+
 ## Docs: http://www.rondotsch.nl/wp-content/uploads/2014/09/Reverse-correlation-tutorial-1.pdf
 
 # Load reverse correlation toolbox

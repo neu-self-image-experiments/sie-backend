@@ -62,7 +62,11 @@ def index():
             RAW_IMG_BUCKET, file_name, f"{mkdir(participant_id)}/{file_name}"
         )
         print("downloaded_to:", downloaded_path)
-        generate_stimuli(downloaded_path, participant_id)
+        
+        try:
+            generate_stimuli(downloaded_path, participant_id)
+        except Exception:
+            return ("Failed to generate stimuli", 500)
 
         return ("Processing stimuli...", 204)
 

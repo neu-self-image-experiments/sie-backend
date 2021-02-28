@@ -1,3 +1,5 @@
+#! /usr/bin/Rscript --vanilla
+
 # Install reverse correlation toolbox
 install.packages("rcicr", repos="http://R-Forge.R-project.org")
 
