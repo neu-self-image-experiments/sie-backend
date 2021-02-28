@@ -26,7 +26,7 @@ def generate_stimuli(img_file_path, participant_id):
     stimuli_dir = mkdir(participant_id, "stimuli")
 
     try:
-        subprocess.check_call(["Rscript generate_stimuli.R", output_dir], shell=True)
+        subprocess.check_call(["Rscript", "generate_stimuli.R", output_dir], shell=True)
         bucket_name = f"{STIMULI_BUCKET}/{participant_id}"
         upload_files(bucket_name, stimuli_dir)
     except subprocess.CalledProcessError as err:
