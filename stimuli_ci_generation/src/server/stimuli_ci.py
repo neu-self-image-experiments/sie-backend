@@ -26,7 +26,6 @@ def generate_stimuli(img_file_path, participant_id):
     output_dir = mkdir(participant_id)
     stimuli_dir = mkdir(participant_id, "stimuli")
     r_script_path = f"{os.getcwd()}/generate_stimuli.R"
-    print("r_script_path:", r_script_path)
 
     try:
         subprocess.check_call(
@@ -57,8 +56,9 @@ def generate_ci(participant_id):
         f"{USER_SELECTION_BUCKET}/{participant_id}", "user_selection.csv", output_dir
     )
 
+    r_script_path = f"{os.getcwd()}/generate_ci.R"
     try:
-        subprocess.check_call(["Rscript", "generate_ci.R", output_dir], shell=False)
+        subprocess.check_call(["Rscript", r_script_path, output_dir], shell=False)
         upload_files(ci_bucket, ci_dir)
     except subprocess.CalledProcessError as err:
         print("Error running generate_ci.R")
