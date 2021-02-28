@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 
 from flask import Flask
 from flask import request
@@ -9,7 +9,7 @@ import json
 
 from gcloud_services.cloud_storage import download_file
 
-# from server.stimuli_ci import generate_stimuli
+from server.stimuli_ci import generate_stimuli
 from util import mkdir
 
 RAW_IMG_BUCKET = "sie-raw-images"
@@ -62,7 +62,7 @@ def index():
             RAW_IMG_BUCKET, file_name, f"{mkdir(participant_id)}/{file_name}"
         )
         print("downloaded_to:", downloaded_path)
-        # generate_stimuli(downloaded_path, participant_id)
+        generate_stimuli(downloaded_path, participant_id)
 
         return ("Processing stimuli...", 204)
 

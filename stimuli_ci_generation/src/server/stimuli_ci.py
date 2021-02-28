@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 
 import subprocess
 
@@ -23,8 +23,8 @@ def generate_stimuli(img_file_path, participant_id):
     """
 
     output_dir = mkdir(participant_id)
-    stimuli_dir = mkdir(output_dir, "stimuli")
-    subprocess.run(["Rscript", "generate_stimuli.R", output_dir], shell=False)
+    stimuli_dir = mkdir(participant_id, "stimuli")
+    subprocess.run(["Rscript", "generate_stimuli.R", output_dir], shell=True)
 
     bucket_name = f"{STIMULI_BUCKET}/{participant_id}"
     upload_files(bucket_name, stimuli_dir)
