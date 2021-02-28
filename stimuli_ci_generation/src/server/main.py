@@ -8,6 +8,7 @@ import base64
 import json
 
 from gcloud_services.cloud_storage import download_file
+
 # from server.stimuli_ci import generate_stimuli
 from util import mkdir
 
