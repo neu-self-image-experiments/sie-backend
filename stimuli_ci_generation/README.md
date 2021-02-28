@@ -70,7 +70,7 @@ Containers must be built in the following order and use the correct tags:
     --push-auth-service-account=sie-cloud-run-pubsub-invoker@$GCP_PROJECT.iam.gserviceaccount.com
 
     // Create a storage trigger that sends a message to cloud run
-    gsutil notification create -t sie-image-processing -f json -e OBJECT_FINALIZE gs://sie-raw-images
+    gsutil notification create -t sie-image-processing -f json -e OBJECT_FINALIZE gs://sie-masked-images
 
     // Test
     gsutil cp /path/to/local/file gs://bucket

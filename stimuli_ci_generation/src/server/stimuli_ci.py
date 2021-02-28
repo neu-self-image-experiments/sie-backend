@@ -6,7 +6,7 @@ import os
 from gcloud_services.cloud_storage import upload_files, download_file
 from util import mkdir
 
-
+MASKED_BUCKET = "sie-masked-images"
 STIMULI_BUCKET = "sie-stimuli"
 CI_BUCKET = "sie-classified-images"
 USER_SELECTION_BUCKET = "sie-results"
@@ -24,6 +24,10 @@ def generate_stimuli(img_file_path, participant_id):
     """
 
     output_dir = mkdir(participant_id)
+    # download masked image produced by face_detection cloud function
+    download_file(
+        f"{MASKED_BUCKET}/{participant_id}", "neutral.jpg", output_dir
+    )
     stimuli_dir = mkdir(participant_id, "stimuli")
     r_script_path = f"{os.getcwd()}/generate_stimuli.R"
 
