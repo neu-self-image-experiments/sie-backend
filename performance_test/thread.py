@@ -7,11 +7,10 @@ from google.cloud import storage
 This is the thread class which send post request to the GCP
 """
 
+RAW_BUCKET = "sie-raw-images"
+STIMULI_BUCKET = "sie-stimuli"
+
 class thread:
-
-
-    RAW_BUCKET = "sie-raw-images"
-    STIMULI_BUCKET = "sie-stimuli"
 
     def __init__(self, bucket_name, sleep_time):
         self.participant_id = bucket_name
@@ -39,7 +38,7 @@ class thread:
         """
 
         storage_client = storage.Client()
-        bucket_name = f"{STIMULI_BUCKET}/{participant_id}"
+        bucket_name = f"{STIMULI_BUCKET}/{self.participant_id}"
         return storage.Blob(
             bucket=bucket_name, name=self.bucket_name + "_20.jpg"
         ).exists(storage_client)

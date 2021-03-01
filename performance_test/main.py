@@ -1,6 +1,5 @@
 import thread
 
-from time import time
 from concurrent.futures import ThreadPoolExecutor
 
 SLEEP_TIME = 2
