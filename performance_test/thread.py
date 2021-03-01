@@ -12,15 +12,21 @@ STIMULI_BUCKET = "sie-stimuli"
 
 
 class thread:
-    def __init__(self, bucket_name, sleep_time):
+    def __init__(self, bucket_name, sleep_time, start_queue, end_queue):
         self.participant_id = bucket_name
         self.sleep_time = sleep_time
+        self.start_queue = start_queue
+        self.end_queue = end_queue
 
     def run(self, file_dir, file_name):
+        start_time = time.time()
+        self.start_queue.put(start_time)
         self.upload_image(file_dir, file_name)
 
         while self.check_finish() is False:
             time.sleep(self.sleep_time)
+        end_time = time.time()
+        self.end_queue.put(end_time)
 
     def upload_image(self, file_dir, file_name):
         """
