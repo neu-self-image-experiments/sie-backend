@@ -496,7 +496,8 @@ def trigger_detect_and_mask(event, context):
         )
 
         # Upload masked image to sie-masked-images bucket
-        cloud_upload_to = event["name"]
+        participant_id = os.path.splitext(event["name"])[0]  # remove file ext
+        cloud_upload_to = f"{participant_id}/{constants.PROCESSED_IMAGE}"
         upload_image("sie-masked-images", cloud_upload_from, cloud_upload_to)
         print("Processed image saved at: " + cloud_upload_to)
 
