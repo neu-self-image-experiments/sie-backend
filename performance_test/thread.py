@@ -10,8 +10,8 @@ This is the thread class which send post request to the GCP
 RAW_BUCKET = "sie-raw-images"
 STIMULI_BUCKET = "sie-stimuli"
 
-class thread:
 
+class thread:
     def __init__(self, bucket_name, sleep_time):
         self.participant_id = bucket_name
         self.sleep_time = sleep_time
