@@ -1,12 +1,10 @@
-import logging
-import os
 import thread
-import counter
 
 from time import time
 from concurrent.futures import ThreadPoolExecutor
 
 SLEEP_TIME = 2
+
 
 def main(num_thread):
 

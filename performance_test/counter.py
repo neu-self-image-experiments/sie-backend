@@ -5,13 +5,14 @@ import threading
 '''
 
 class counter():
+    
     def __init__(self, count):
         self.count = 0
         self.lock = threading.Lock()
 
-    def dec():
+    def dec(self):
         with self.lock:
-            count -= 1
+            self.count -= 1
     
-    def getCount():
+    def getCount(self):
         return self.count

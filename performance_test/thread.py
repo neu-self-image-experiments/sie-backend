@@ -1,8 +1,6 @@
-import threading
 import time
 import os
 
-from google.cloud import vision
 from google.cloud import storage
 
 '''
@@ -10,9 +8,10 @@ from google.cloud import storage
 '''
 
 class thread():
+
+
     RAW_BUCKET = "sie-raw-images"
     STIMULI_BUCKET = "sie-stimuli"
-    STIMULI_FILE_NAME = self.bucket_name + "_20.jpg"
 
     def __init__(self, bucket_name, sleep_time):
         self.participant_id = bucket_name
@@ -25,17 +24,21 @@ class thread():
             time.sleep(self.sleep_time)
 
     def upload_image(self, file_dir, file_name):
-        '''
+        """
             Sends an image to sie-raw bucket
-        '''
+        """
+
         storage_client = storage.Client()
         bucket = storage_client.bucket(RAW_BUCKET)
         blob = bucket.blob(self.participant_id)
         blob.upload_from_filename(os.path.join(file_dir, file_name))
 
     def check_finish(self):
-        '''
-            Check if the image generation is finished
-        '''
+        """
+        Check if the image generation is finished
+        """
+
+        storage_client = storage.Client()
         bucket_name = f"{STIMULI_BUCKET}/{participant_id}"
-        return storage.Blob(bucket=bucket_name, name=STIMULI_FILE_NAME).exists(storage_client)
+        return storage.Blob(bucket=bucket_name, 
+        name=self.bucket_name + "_20.jpg").exists(storage_client)
