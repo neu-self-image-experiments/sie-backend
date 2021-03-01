@@ -143,3 +143,6 @@ cython_debug/s
 
 # IDE locale
 .vscode/*
+
+# Data
+test_data/
