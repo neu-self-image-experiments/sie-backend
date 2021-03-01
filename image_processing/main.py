@@ -445,24 +445,30 @@ def trigger_detect_and_mask(event, context):
     Returns:
         str; error or success message
     """
-    bucket_name = event["bucket"]
+
+    bucket_name = event["bucket"]  # sie-raw-images bucket
     cloud_storage_prefix = "gs://" + bucket_name + "/"
     cloud_download_from = event["name"]  # file name
+
+    # local directory to store image
     cloud_download_to = os.getcwd() + "/" + constants.TEMP_DIR + "/" + event["name"]
 
+    # fetching image from this URI
     uri = cloud_storage_prefix + cloud_download_from
 
     try:
+        # check for face
         results = face_detection(uri)
 
         # temp directory to store images
         if not os.path.exists(constants.TEMP_DIR):
             os.makedirs(constants.TEMP_DIR)
 
+        # download images from bucket sie-raw-images to create a mask
         download_image(bucket_name, cloud_download_from, cloud_download_to)
         print(f"Image {cloud_download_from} downloaded to {cloud_download_to}")
 
-        # valid face
+        # face annotations
         topLeft_x, topLeft_y, bottomRight_x, bottomRight_y = (
             results[0],
             results[1],
@@ -477,6 +483,7 @@ def trigger_detect_and_mask(event, context):
             results[8],
         )
 
+        # process and create a mask
         cloud_upload_from = process_img(
             cloud_download_to,
             topLeft_x,
@@ -499,4 +506,4 @@ def trigger_detect_and_mask(event, context):
     except Exception as err:
         return str(err), 500
 
-    return "Face detected and masked sucessfully!", 200
+    return "Face detected and masked successfully!", 200
