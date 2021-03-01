@@ -196,11 +196,8 @@ def process_img(
     final_img = resize(gray_img)
 
     # Save processed image to local dir
-    processed_file_path = (
-        os.getcwd() + f"/{constants.TEMP_DIR}/{constants.PROCESSED_IMAGE}"
-    )
+    processed_file_path = f"/{constants.TEMP_DIR}/{constants.PROCESSED_IMAGE}"
     cv2.imwrite(processed_file_path, final_img)
-    print("Processed image saved at: " + processed_file_path)
     return processed_file_path
 
 
@@ -448,10 +445,13 @@ def trigger_detect_and_mask(event, context):
 
     bucket_name = event["bucket"]  # sie-raw-images bucket
     cloud_storage_prefix = "gs://" + bucket_name + "/"
-    cloud_download_from = event["name"]  # file name
+    cloud_download_from = event["name"]  # file path
+
+    # extract file name from path eg: folder/image.jpg
+    file_name = cloud_download_from.split("/")[-1]
 
     # local directory to store image
-    cloud_download_to = os.getcwd() + "/" + constants.TEMP_DIR + "/" + event["name"]
+    cloud_download_to = "/" + constants.TEMP_DIR + "/" + file_name
 
     # fetching image from this URI
     uri = cloud_storage_prefix + cloud_download_from
@@ -459,10 +459,6 @@ def trigger_detect_and_mask(event, context):
     try:
         # check for face
         results = face_detection(uri)
-
-        # temp directory to store images
-        if not os.path.exists(constants.TEMP_DIR):
-            os.makedirs(constants.TEMP_DIR)
 
         # download images from bucket sie-raw-images to create a mask
         download_image(bucket_name, cloud_download_from, cloud_download_to)
@@ -500,6 +496,7 @@ def trigger_detect_and_mask(event, context):
         # Upload masked image to sie-masked-images bucket
         cloud_upload_to = event["name"]
         upload_image("sie-masked-images", cloud_upload_from, cloud_upload_to)
+        print("Processed image saved at: " + cloud_upload_to)
 
     except exceptions.InvalidFaceImage as err:
         return str(err), 400
