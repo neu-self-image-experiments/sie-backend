@@ -411,3 +411,92 @@ def upload_processed_images(bucket_name, source_file_folder):
         blob.upload_from_filename(os.path.join(source_file_folder, file_name))
 
         print("File {} uploaded to {}.".format(file_name, bucket_name))
+
+
+def upload_image(bucket_name, source_file_name, destination_blob_name):
+    """
+    Uploads a file to the bucket.
+
+    Args:
+        bucket_name: Name of the bucket to upload file
+        source_file_name: path of file to upload
+    """
+
+    storage_client = storage.Client()
+
+    bucket = storage_client.bucket(bucket_name)
+    blob = bucket.blob(destination_blob_name)
+    blob.upload_from_filename(source_file_name)
+    return destination_blob_name
+
+
+def trigger_detect_and_mask(event, context):
+    """
+    Trigger function to detect and mask an image storaged
+    in the sie-raw-images bucket. Saves the masked image in
+    sie-masked-images.
+
+    Args:
+        event (dict):  The dictionary with data specific to this type of event.
+                        The `data` field contains a description of the event in
+                        the Cloud Storage `object` format described here:
+                        https://cloud.google.com/storage/docs/json_api/v1/objects#resource
+        context (google.cloud.functions.Context): Metadata of triggering event.
+    Returns:
+        str; error or success message
+    """
+    bucket_name = event["bucket"]
+    cloud_storage_prefix = "gs://" + bucket_name + "/"
+    cloud_download_from = event["name"]  # file name
+    cloud_download_to = os.getcwd() + "/" + constants.TEMP_DIR + "/" + event["name"]
+
+    uri = cloud_storage_prefix + cloud_download_from
+
+    try:
+        results = face_detection(uri)
+
+        # temp directory to store images
+        if not os.path.exists(constants.TEMP_DIR):
+            os.makedirs(constants.TEMP_DIR)
+
+        download_image(bucket_name, cloud_download_from, cloud_download_to)
+        print(f"Image {cloud_download_from} downloaded to {cloud_download_to}")
+
+        # valid face
+        topLeft_x, topLeft_y, bottomRight_x, bottomRight_y = (
+            results[0],
+            results[1],
+            results[2],
+            results[3],
+        )
+        mid_eyes, nose, left_ear, right_ear, chin = (
+            results[4],
+            results[5],
+            results[6],
+            results[7],
+            results[8],
+        )
+
+        cloud_upload_from = process_img(
+            cloud_download_to,
+            topLeft_x,
+            topLeft_y,
+            bottomRight_x,
+            bottomRight_y,
+            mid_eyes,
+            nose,
+            left_ear,
+            right_ear,
+            chin,
+        )
+
+        # Upload masked image to sie-masked-images bucket
+        cloud_upload_to = event["name"]
+        upload_image("sie-masked-images", cloud_upload_from, cloud_upload_to)
+
+    except exceptions.InvalidFaceImage as err:
+        return str(err), 400
+    except Exception as err:
+        return str(err), 500
+
+    return "Face detected and masked sucessfully!", 200
