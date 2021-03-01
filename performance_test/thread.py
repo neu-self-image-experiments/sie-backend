@@ -3,9 +3,9 @@ import os
 
 from google.cloud import storage
 
-'''
+"""
     This is the thread class which send post request to the GCP
-'''
+"""
 
 class thread():
 
@@ -40,5 +40,6 @@ class thread():
 
         storage_client = storage.Client()
         bucket_name = f"{STIMULI_BUCKET}/{participant_id}"
-        return storage.Blob(bucket=bucket_name, 
-        name=self.bucket_name + "_20.jpg").exists(storage_client)
+        return storage.Blob(
+            bucket=bucket_name, name=self.bucket_name + "_20.jpg"
+        ).exists(storage_client)
