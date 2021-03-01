@@ -1,10 +1,10 @@
 import threading
 
 """
-    This is the counter
+This is the counter
 """
 
-class counter():
+class counter:
 
     def __init__(self, count):
         self.count = 0

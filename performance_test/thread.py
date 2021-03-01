@@ -4,10 +4,10 @@ import os
 from google.cloud import storage
 
 """
-    This is the thread class which send post request to the GCP
+This is the thread class which send post request to the GCP
 """
 
-class thread():
+class thread:
 
 
     RAW_BUCKET = "sie-raw-images"
@@ -25,7 +25,7 @@ class thread():
 
     def upload_image(self, file_dir, file_name):
         """
-            Sends an image to sie-raw bucket
+        Sends an image to sie-raw bucket
         """
 
         storage_client = storage.Client()
