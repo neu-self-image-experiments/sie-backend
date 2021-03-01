@@ -8,6 +8,8 @@ import os
 import cv2
 import requests
 import numpy as np
+import traceback 
+import sys 
 
 from google.cloud import vision
 from google.cloud import storage
@@ -499,8 +501,10 @@ def trigger_detect_and_mask(event, context):
         print("Processed image saved at: " + cloud_upload_to)
 
     except exceptions.InvalidFaceImage as err:
+        traceback.print_exception(*sys.exc_info())
         return str(err), 400
     except Exception as err:
+        traceback.print_exception(*sys.exc_info())
         return str(err), 500
 
     return "Face detected and masked successfully!", 200
