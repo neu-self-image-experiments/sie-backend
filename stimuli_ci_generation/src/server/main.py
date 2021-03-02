@@ -12,7 +12,7 @@ from gcloud_services.cloud_storage import download_file
 from server.stimuli_ci import generate_stimuli
 from util import mkdir
 
-RAW_IMG_BUCKET = "sie-raw-images"
+MASKED_IMAGE_BUCKET = "sie-masked-images"
 
 
 app = Flask(__name__)
@@ -55,16 +55,16 @@ def index():
             print(f"error: {msg}")
             return f"Bad Request: {msg}", 400
 
-        file_name = data["name"]  # file_name should be participant_id.jpg
-        print("file_name:", file_name)
-        participant_id = file_name.split(".")[0]
+        file_identifier = data["name"]  # should be participant_id/neutral.jpg
+        print("file_identifier:", file_identifier)
+        participant_id, file_name = file_identifier.split("/")
         downloaded_path = download_file(
-            RAW_IMG_BUCKET, file_name, f"{mkdir(participant_id)}/{file_name}"
+            MASKED_IMAGE_BUCKET, file_identifier, f"{mkdir(participant_id)}/{file_name}"
         )
         print("downloaded_to:", downloaded_path)
 
         try:
-            generate_stimuli(downloaded_path, participant_id)
+            generate_stimuli(participant_id)
         except Exception:
             return ("Failed to generate stimuli", 500)
 

@@ -12,11 +12,10 @@ CI_BUCKET = "sie-classified-images"
 USER_SELECTION_BUCKET = "sie-results"
 
 
-def generate_stimuli(img_file_path, participant_id):
+def generate_stimuli(participant_id):
     """
     Run stimuli generation and save processed images for experiment
     Args:
-        img_file_path: downloaded image
         participant_id: participant_id extracted from img filename
 
     Returns:
@@ -24,17 +23,15 @@ def generate_stimuli(img_file_path, participant_id):
     """
 
     output_dir = mkdir(participant_id)
-    # download masked image produced by face_detection cloud function
-    download_file(f"{MASKED_BUCKET}/{participant_id}", "neutral.jpg", output_dir)
     stimuli_dir = mkdir(participant_id, "stimuli")
     r_script_path = f"{os.getcwd()}/generate_stimuli.R"
 
     try:
         subprocess.check_call(
-            ["Rscript", "--vanilla", r_script_path, "--args", output_dir], shell=False
+            ["Rscript", "--vanilla", r_script_path, output_dir], shell=False
         )
-        bucket_name = f"{STIMULI_BUCKET}/{participant_id}"
-        upload_files(bucket_name, stimuli_dir)
+        print("Finished running generate_stimuli.R")
+        upload_files(STIMULI_BUCKET, stimuli_dir, participant_id)
     except subprocess.CalledProcessError as err:
         print("Error running generate_stimuli.R", err)
         raise err

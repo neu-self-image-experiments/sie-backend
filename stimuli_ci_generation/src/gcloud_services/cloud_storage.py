@@ -24,16 +24,34 @@ def download_file(bucket_name, source_blob_name, destination_file_name):
     # using `Bucket.blob` is preferred here.
     blob = bucket.blob(source_blob_name)
     blob.download_to_filename(destination_file_name)
+    print(f"Downloading {source_blob_name} to {destination_file_name}")
 
     return destination_file_name
 
 
-def upload_files(bucket_name, source_file_folder):
+def upload_file(bucket_name, source_file_name, destination_blob_name):
+    """
+    Uploads a file to the bucket.
+
+    Args:
+        bucket_name: Name of the bucket to upload file
+        source_file_name: path of file to upload
+    """
+
+    storage_client = storage.Client()
+
+    bucket = storage_client.bucket(bucket_name)
+    blob = bucket.blob(destination_blob_name)
+    blob.upload_from_filename(source_file_name)
+    return destination_blob_name
+    
+
+def upload_files(bucket_name, source_file_folder, file_prefix):
     """Uploads images to the bucket.
     Args:
         bucket_name: bucket to upload files to
         source_file_folder: Path to the folder to be uploaded
-
+        file_prefix: prefix to file identifier in cloud storage bucket
     Returns:
         None
     """
@@ -41,8 +59,8 @@ def upload_files(bucket_name, source_file_folder):
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
 
+    print(f"Uploading files from {source_file_folder} to {bucket_name}")
     for file_name in os.listdir(source_file_folder):
-        blob = bucket.blob(file_name)
-        blob.upload_from_filename(os.path.join(source_file_folder, file_name))
-
-        print("File {} uploaded to {}.".format(file_name, bucket_name))
+        local_path = os.path.join(source_file_folder, file_name)
+        bucket_file_id = f"{file_prefix}/{file_name}"
+        upload_file(bucket_name, local_path, bucket_file_id)
