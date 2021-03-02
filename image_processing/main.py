@@ -436,8 +436,8 @@ def trigger_generated_pictures(event, context):
             file_creation(generated_path)
         else:
             print("Error %s file not fond" % generated_path)
-    except Exception:
-        return 
+    except Exception as err:
+        print('Run-time error:', err)
 
 
 def file_creation(generated_path):
@@ -453,7 +453,7 @@ def file_creation(generated_path):
     subscription_path = subscriber.subscription_path(project_id, subscription_id)
 
     # Create a topic in request
-    #topic = publisher.create_topic(request={"name": topic_path})
+    # topic = publisher.create_topic(request={"name": topic_path})
 
     # Wrap the subscriber in a 'with' block to automatically call close() to
     # close the underlying gRPC channel when done.
