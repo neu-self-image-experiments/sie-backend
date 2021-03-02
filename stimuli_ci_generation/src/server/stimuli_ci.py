@@ -3,16 +3,13 @@
 import subprocess
 import os
 
-from gcloud_services.cloud_storage import upload_dir, download_file
+from gcp_cloud_storage import upload_dir, download_file
 from util import mkdir
 
-MASKED_BUCKET = "sie-masked-images"
-STIMULI_BUCKET = "sie-stimuli"
-CI_BUCKET = "sie-classified-images"
-USER_SELECTION_BUCKET = "sie-results"
+import bucket_config
 
 
-def generate_stimuli(participant_id):
+def generate_stimuli(participant_id, file_name):
     """
     Run stimuli generation and save processed images for experiment
     Args:
@@ -21,6 +18,12 @@ def generate_stimuli(participant_id):
     Returns:
         None
     """
+    downloaded_path = download_file(
+            bucket_config.MASKED_IMAGE_BUCKET,
+            f"{participant_id}/{file_name}",
+            f"{mkdir(participant_id)}/{file_name}"
+        )
+    print("downloaded_to:", downloaded_path)
 
     output_dir = mkdir(participant_id)
     stimuli_dir = mkdir(participant_id, "stimuli")
@@ -31,13 +34,13 @@ def generate_stimuli(participant_id):
             ["Rscript", "--vanilla", r_script_path, output_dir], shell=False
         )
         print("Finished running generate_stimuli.R")
-        upload_dir(STIMULI_BUCKET, stimuli_dir, participant_id)
+        upload_dir(bucket_config.STIMULI_BUCKET, stimuli_dir, participant_id)
     except subprocess.CalledProcessError as err:
         print("Error running generate_stimuli.R", err)
         raise err
 
 
-def generate_ci(participant_id):
+def generate_ci(participant_id, file_name):
     """
     Run ci and upload results to cloud storage
     Args:

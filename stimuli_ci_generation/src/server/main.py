@@ -6,18 +6,10 @@ from flask import request
 import os
 import base64
 import json
-import time
 
-from gcloud_services.cloud_storage import download_file
-
-from server.stimuli_ci import generate_stimuli
-from util import mkdir
-
-MASKED_IMAGE_BUCKET = "sie-masked-images"
-
+from server.stimuli_ci import generate_stimul, generate_ci
 
 app = Flask(__name__)
-
 
 @app.route("/", methods=["POST"])
 def index():
@@ -32,7 +24,6 @@ def index():
         print(f"error: {msg}")
         return f"Bad Request: {msg}", 400
 
-    start = time.time()
     # Decode the Pub/Sub message.
     pubsub_message = envelope["message"]
 
@@ -60,24 +51,26 @@ def index():
         file_identifier = data["name"]  # should be participant_id/neutral.jpg
         print("file_identifier:", file_identifier)
         participant_id, file_name = file_identifier.split("/")
-        downloaded_path = download_file(
-            MASKED_IMAGE_BUCKET, file_identifier, f"{mkdir(participant_id)}/{file_name}"
-        )
-        print("downloaded_to:", downloaded_path)
+        file_type = file_name.split(".")[-1]
 
-        end_download = time.time()
-        print("Trigger and download latency:", end_download - start)
-
-        try:
-            generate_stimuli(participant_id)
-        except Exception:
-            return ("Failed to generate stimuli", 500)
-
-        print("Stimuli generation:", time.time() - end_download)
-
-        return ("Processing stimuli...", 204)
+        if file_type.lower() == "csv":
+            try:
+                generate_ci(participant_id, file_name)
+                return ("Generating ci images...", 204)
+            except Exception:
+                return ("Failed to generate ci", 500)
+        else:
+            try:
+                generate_stimuli(participant_id, file_name)
+                return ("Generating stimuli images...", 204)
+            except Exception:
+                return ("Failed to generate stimuli", 500)
 
     return ("", 500)
+
+@app.route("/status", methods=["GET"])
+def status():
+    return ("OK", 200)
 
 
 if __name__ == "__main__":
