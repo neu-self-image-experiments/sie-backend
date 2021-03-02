@@ -6,6 +6,7 @@ from flask import request
 import os
 import base64
 import json
+import time
 
 from gcloud_services.cloud_storage import download_file
 
@@ -31,6 +32,7 @@ def index():
         print(f"error: {msg}")
         return f"Bad Request: {msg}", 400
 
+    start = time.time()
     # Decode the Pub/Sub message.
     pubsub_message = envelope["message"]
 
@@ -63,10 +65,15 @@ def index():
         )
         print("downloaded_to:", downloaded_path)
 
+        end_download = time.time()
+        print("Trigger and download latency:", end_download - start)
+
         try:
             generate_stimuli(participant_id)
         except Exception:
             return ("Failed to generate stimuli", 500)
+
+        print("Stimuli generation:", time.time() - end_download)
 
         return ("Processing stimuli...", 204)
 

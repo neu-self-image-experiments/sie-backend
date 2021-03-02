@@ -3,7 +3,7 @@
 import subprocess
 import os
 
-from gcloud_services.cloud_storage import upload_files, download_file
+from gcloud_services.cloud_storage import upload_dir, download_file
 from util import mkdir
 
 MASKED_BUCKET = "sie-masked-images"
@@ -31,7 +31,7 @@ def generate_stimuli(participant_id):
             ["Rscript", "--vanilla", r_script_path, output_dir], shell=False
         )
         print("Finished running generate_stimuli.R")
-        upload_files(STIMULI_BUCKET, stimuli_dir, participant_id)
+        upload_dir(STIMULI_BUCKET, stimuli_dir, participant_id)
     except subprocess.CalledProcessError as err:
         print("Error running generate_stimuli.R", err)
         raise err
@@ -58,7 +58,7 @@ def generate_ci(participant_id):
     r_script_path = f"{os.getcwd()}/generate_ci.R"
     try:
         subprocess.check_call(["Rscript", r_script_path, output_dir], shell=False)
-        upload_files(ci_bucket, ci_dir)
+        upload_dir(ci_bucket, ci_dir, participant_id)
     except subprocess.CalledProcessError as err:
         print("Error running generate_ci.R")
         raise err

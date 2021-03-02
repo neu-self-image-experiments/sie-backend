@@ -44,10 +44,10 @@ def upload_file(bucket_name, source_file_name, destination_blob_name):
     blob = bucket.blob(destination_blob_name)
     blob.upload_from_filename(source_file_name)
     return destination_blob_name
-    
 
-def upload_files(bucket_name, source_file_folder, file_prefix):
-    """Uploads images to the bucket.
+
+def upload_dir(bucket_name, source_file_folder, file_prefix):
+    """Uploads images from a dir to the bucket.
     Args:
         bucket_name: bucket to upload files to
         source_file_folder: Path to the folder to be uploaded
@@ -63,4 +63,5 @@ def upload_files(bucket_name, source_file_folder, file_prefix):
     for file_name in os.listdir(source_file_folder):
         local_path = os.path.join(source_file_folder, file_name)
         bucket_file_id = f"{file_prefix}/{file_name}"
-        upload_file(bucket_name, local_path, bucket_file_id)
+        blob = bucket.blob(bucket_file_id)
+        blob.upload_from_filename(local_path)
