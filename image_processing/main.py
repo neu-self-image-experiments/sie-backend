@@ -413,6 +413,7 @@ def upload_processed_images(bucket_name, source_file_folder):
 
         print("File {} uploaded to {}.".format(file_name, bucket_name))
 
+
 def trigger_generated_pictures(event, context):
     """
     Background Cloud Function to be triggered by Cloud Storage.
@@ -428,19 +429,18 @@ def trigger_generated_pictures(event, context):
         None; the output is written to Stackdriver Logging
     """
 
-    bucket_name = event["bucket"]
     generated_path = event["name"]
 
     try:
         if os.path.isfile(generated_path):
-            file_creation (generated_path)
+            file_creation(generated_path)
         else:
             print("Error %s file not fond" % generated_path)
     except Exception:
-        pass
-    
+        return 
 
-def file_creation (generated_path):
+
+def file_creation(generated_path):
 
     # TODO(developer)
     project_id = "your-project-id"
@@ -452,8 +452,8 @@ def file_creation (generated_path):
     topic_path = publisher.topic_path(project_id, topic_id)
     subscription_path = subscriber.subscription_path(project_id, subscription_id)
 
-    #Create a topic in request
-    topic = publisher.create_topic(request={"name": topic_path})
+    # Create a topic in request
+    #topic = publisher.create_topic(request={"name": topic_path})
 
     # Wrap the subscriber in a 'with' block to automatically call close() to
     # close the underlying gRPC channel when done.
