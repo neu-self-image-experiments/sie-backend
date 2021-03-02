@@ -198,7 +198,7 @@ def process_img(
     final_img = resize(gray_img)
 
     # Save processed image to local dir
-    processed_file_path = f"/{constants.TEMP_DIR}/{constants.PROCESSED_IMAGE}"
+    processed_file_path = f"{constants.TEMP_DIR}/{constants.PROCESSED_IMAGE}"
     cv2.imwrite(processed_file_path, final_img)
     return processed_file_path
 
@@ -453,7 +453,7 @@ def trigger_detect_and_mask(event, context):
     file_name = cloud_download_from.split("/")[-1]
 
     # local directory to store image
-    cloud_download_to = "/" + constants.TEMP_DIR + "/" + file_name
+    cloud_download_to = f"{constants.TEMP_DIR}/{file_name}"
 
     # fetching image from this URI
     uri = cloud_storage_prefix + cloud_download_from
@@ -496,7 +496,7 @@ def trigger_detect_and_mask(event, context):
         )
 
         # Upload masked image to sie-masked-images bucket
-        participant_id = os.path.splitext(event["name"])[0]  # remove file ext
+        participant_id = os.path.splitext(file_name)[0]  # remove file ext
         cloud_upload_to = f"{participant_id}/{constants.PROCESSED_IMAGE}"
         upload_image("sie-masked-images", cloud_upload_from, cloud_upload_to)
         print("Processed image saved at: " + cloud_upload_to)

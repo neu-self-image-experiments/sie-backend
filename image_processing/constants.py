@@ -22,6 +22,6 @@ THICKNESS = -1  # Line thickness
 """
     PROJECT SPECIFIC
 """
-TEMP_DIR = "tmp"
+TEMP_DIR = "/tmp"
 SOURCE_IMAGE = "ori.jpg"
 PROCESSED_IMAGE = "neutral.jpg"
