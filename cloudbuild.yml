@@ -19,3 +19,14 @@ steps:
     - --source=./image-processing
     - --trigger-resource=sie-raw-images
     - --trigger-event=google.storage.object.finalize
+
+- name: 'gcr.io/cloud-builders/gcloud'
+  args:
+    - functions
+    - deploy
+    - trigger_generated_pictures
+    - --runtime=python38
+    - --region=us-central1
+    - --source=./image-processing
+    - --trigger-resource=sie-processed-images
+    - --trigger-event=google.storage.object.finalize
