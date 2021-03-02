@@ -23,8 +23,12 @@ def performance_test(num_thread):
 
     while start_queue.empty() is False:
         min_start_time = min(min_start_time, start_queue.get())
-    
+
     while end_queue.empty() is False:
         max_end_time = max(max_end_time, end_queue.get())
-    
-    print("The resulting throughput of the program is {}".format(float((max_end_time - min_start_time) / num_thread)))
+
+    print(
+        "The resulting throughput of the program is {}".format(
+            float((max_end_time - min_start_time) / num_thread)
+        )
+    )
