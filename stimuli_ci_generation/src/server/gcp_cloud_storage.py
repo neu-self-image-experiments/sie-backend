@@ -3,6 +3,7 @@
 import os
 from google.cloud import storage
 
+
 def download_file(bucket_name, source_blob_name, destination_file_name):
     """Downloads the specified image from cloud storage
     Args:

@@ -11,6 +11,7 @@ from server.stimuli_ci import generate_stimuli, generate_ci
 
 app = Flask(__name__)
 
+
 @app.route("/", methods=["POST"])
 def index():
     envelope = request.get_json()
@@ -67,6 +68,7 @@ def index():
                 return ("Failed to generate stimuli", 204)
 
     return ("data missing in pub/sub message", 500)
+
 
 @app.route("/status", methods=["GET"])
 def status():
