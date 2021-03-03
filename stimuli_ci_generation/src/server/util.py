@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import os
+import shutil
 
 
 def mkdir(participant_id, *args):
@@ -24,3 +25,7 @@ def mkdir(participant_id, *args):
         print("Directory '%s' existed" % tmp_dir)
 
     return tmp_dir
+
+
+def rmdir(directory):
+    shutil.rmtree(directory)

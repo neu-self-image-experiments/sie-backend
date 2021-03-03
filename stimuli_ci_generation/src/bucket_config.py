@@ -6,5 +6,5 @@
 RAW_IMG_BUCKET = "sie-raw-images"
 MASKED_IMG_BUCKET = "sie-masked-images"
 STIMULI_IMG_BUCKET = "sie-stimuli-images"
-USER_SELECTION_BUCKET = "sie-user_selections"
+USER_SELECTION_BUCKET = "sie-user-selections"
 CI_IMG_BUCKET = "sie-ci-images"

@@ -21,10 +21,10 @@ groupci <- generateCI2IFC(
     baseimage='mnes', # string specifying the key used in list of base images 
     rdata=rdata, 
     saveasjpeg=FALSE,
-    targetpath = paste(work_dir, "/cis", sep = "")
+    targetpath = paste(work_dir, "/ci", sep = "")
 )
 
 groupci <- autoscale(
     list('groupci'=groupci),
-    targetpath = paste(work_dir, "/cis", sep = "")
+    targetpath = paste(work_dir, "/ci", sep = "")
 )
