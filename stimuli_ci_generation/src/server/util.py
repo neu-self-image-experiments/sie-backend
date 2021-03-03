@@ -2,7 +2,6 @@
 
 import os
 
-
 def mkdir(participant_id, *args):
     """
     Create directories in tmp dir

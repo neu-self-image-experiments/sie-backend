@@ -3,7 +3,6 @@
 import os
 from google.cloud import storage
 
-
 def download_file(bucket_name, source_blob_name, destination_file_name):
     """Downloads the specified image from cloud storage
     Args:
@@ -24,7 +23,7 @@ def download_file(bucket_name, source_blob_name, destination_file_name):
     # using `Bucket.blob` is preferred here.
     blob = bucket.blob(source_blob_name)
     blob.download_to_filename(destination_file_name)
-    print(f"Downloading {source_blob_name} to {destination_file_name}")
+    logging.info(f"Downloading {source_blob_name} to {destination_file_name}")
 
     return destination_file_name
 
@@ -59,7 +58,7 @@ def upload_dir(bucket_name, source_file_folder, file_prefix):
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
 
-    print(f"Uploading files from {source_file_folder} to {bucket_name}")
+    logging.info(f"Uploading files from {source_file_folder} to {bucket_name}")
     for file_name in os.listdir(source_file_folder):
         local_path = os.path.join(source_file_folder, file_name)
         bucket_file_id = f"{file_prefix}/{file_name}"

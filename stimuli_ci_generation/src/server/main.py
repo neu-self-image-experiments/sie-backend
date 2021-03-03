@@ -7,7 +7,7 @@ import os
 import base64
 import json
 
-from server.stimuli_ci import generate_stimul, generate_ci
+from server.stimuli_ci import generate_stimuli, generate_ci
 
 app = Flask(__name__)
 
@@ -56,17 +56,17 @@ def index():
         if file_type.lower() == "csv":
             try:
                 generate_ci(participant_id, file_name)
-                return ("Generating ci images...", 204)
+                return ("Generating ci images...", 202)
             except Exception:
-                return ("Failed to generate ci", 500)
+                return ("Failed to generate ci", 204)
         else:
             try:
                 generate_stimuli(participant_id, file_name)
-                return ("Generating stimuli images...", 204)
+                return ("Generating stimuli images...", 202)
             except Exception:
-                return ("Failed to generate stimuli", 500)
+                return ("Failed to generate stimuli", 204)
 
-    return ("", 500)
+    return ("data missing in pub/sub message", 500)
 
 @app.route("/status", methods=["GET"])
 def status():
