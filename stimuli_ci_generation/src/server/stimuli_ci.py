@@ -27,7 +27,7 @@ def generate_stimuli(participant_id, file_name):
 
     output_dir = mkdir(participant_id)
     stimuli_dir = mkdir(participant_id, "stimuli")
-    r_script_path = f"{os.getcwd()}/generate_stimuli.R"
+    r_script_path = f"{os.getcwd()}/rscript/generate_stimuli.R"
 
     try:
         subprocess.check_call(
@@ -63,7 +63,7 @@ def generate_ci(participant_id, file_name):
         output_dir
     )
 
-    r_script_path = f"{os.getcwd()}/generate_ci.R"
+    r_script_path = f"{os.getcwd()}/rscript/generate_ci.R"
     try:
         subprocess.check_call(["Rscript", r_script_path, output_dir], shell=False)
         upload_dir(
