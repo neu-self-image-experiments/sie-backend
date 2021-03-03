@@ -56,7 +56,6 @@ def index():
 
         if file_type.lower() == "csv":
             try:
-                print("starting generation for stimuli.")
                 generate_ci(participant_id, file_name)
                 return ("Generating ci images...", 202)
             except Exception:

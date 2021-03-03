@@ -56,6 +56,7 @@ def generate_ci(participant_id, file_name):
     """
     ws_dir = mkdir(participant_id)
     ci_dir = mkdir(participant_id, "ci")
+    r_script_path = f"{os.getcwd()}/rscript/generate_ci.R"
 
     if not os.path.exists(f"{ws_dir}/stimuli"):
         mkdir(participant_id, "stimuli")
@@ -72,7 +73,7 @@ def generate_ci(participant_id, file_name):
     print(f"user_selection.csv has been downloaded to {ws_dir}/{USER_SELECTION}")
 
     try:
-        subprocess.check_call(["Rscript", "generate_ci.R", ws_dir], shell=False)
+        subprocess.check_call(["Rscript", r_script_path, ws_dir], shell=False)
         print("Finished running generate_ci.R")
         upload_dir(bucket_config.CI_IMG_BUCKET, ci_dir, participant_id)
     except subprocess.CalledProcessError as err:

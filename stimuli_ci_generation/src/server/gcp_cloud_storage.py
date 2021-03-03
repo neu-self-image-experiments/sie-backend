@@ -37,15 +37,16 @@ def download_dir(bucket_name, source_dir, destination_dir):
         destination_dir: where to download to
 
     Returns:
-        Local path to downloaded image
+        Local path to downloaded folder
     """
 
     storage_client = storage.Client()
-    bucket = storage_client.bucket(bucket_name)
 
-    blobs = bucket.list_blobs(prefix=source_dir)  # Get list of files
-    print(f"Downloading {source_dir} to {destination_dir}")
+    blobs = storage_client.list_blobs(bucket_name, prefix=f"{source_dir}/")
+    print(f"Downloading folder {source_dir} to {destination_dir}")
+    print(len(blobs))
     for blob in blobs:
+        print("downloading: ", blob.name)
         blob.download_to_filename(f"{destination_dir}/{blob.name}")
 
     return destination_dir

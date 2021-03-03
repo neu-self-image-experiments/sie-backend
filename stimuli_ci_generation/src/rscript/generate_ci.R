@@ -1,8 +1,5 @@
 #!/usr/bin/env Rscript
 
-# Install reverse correlation toolbox
-install.packages("rcicr", repos="http://R-Forge.R-project.org")
-
 # Load reverse correlation toolbox
 library(rcicr)
 args <- commandArgs(trailingOnly = TRUE)
