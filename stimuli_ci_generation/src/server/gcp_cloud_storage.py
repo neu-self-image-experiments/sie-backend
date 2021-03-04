@@ -29,6 +29,29 @@ def download_file(bucket_name, source_blob_name, destination_file_name):
     return destination_file_name
 
 
+def download_dir(bucket_name, source_dir, destination_dir):
+    """Downloads the specified folder from cloud storage
+    Args:
+        bucket_name: bucket to download from
+        source_dir: folder to download
+        destination_dir: where to download to
+
+    Returns:
+        Local path to downloaded folder
+    """
+
+    storage_client = storage.Client()
+
+    blobs = storage_client.list_blobs(bucket_name, prefix=f"{source_dir}/")
+    print(f"Downloading folder {source_dir} to {destination_dir}")
+    print(len(blobs))
+    for blob in blobs:
+        print("downloading: ", blob.name)
+        blob.download_to_filename(f"{destination_dir}/{blob.name}")
+
+    return destination_dir
+
+
 def upload_file(bucket_name, source_file_name, destination_blob_name):
     """
     Uploads a file to the bucket.

@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import os
+import shutil
 
 
 def mkdir(participant_id, *args):
@@ -21,6 +22,10 @@ def mkdir(participant_id, *args):
         os.makedirs(tmp_dir, exist_ok=True)  # suppressed FileExistsError
         print("Directory '%s' created" % tmp_dir)
     except OSError:
-        print("Directory '%s' can not be created" % tmp_dir)
+        print("Directory '%s' existed" % tmp_dir)
 
     return tmp_dir
+
+
+def rmdir(directory):
+    shutil.rmtree(directory)

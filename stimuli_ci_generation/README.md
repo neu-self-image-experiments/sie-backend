@@ -16,7 +16,7 @@ Containers must be built in the following order and use the correct tags:
 - Docker tag: `stimuli_ci_base`
 
 3\. app
-- Dockerfile: `Dockerfile_app`
+- Dockerfile: `Dockerfile`
 - Docker tag: `stimuli_ci_app`
 
 # How to build
@@ -24,12 +24,8 @@ Containers must be built in the following order and use the correct tags:
   - run the build_local.sh script.
 
 - Google Cloud Build
-  - to be added
-
-# How to deploy
-- Google Cloud Run
-    ```
-    // Build docker images
+  ```
+  // Build docker images
     GCP_PROJECT=<GCP_PROJECT>
     PROJECT_NUMBER=<PROJECT_NUMBER>
     CLOUD_RUN_ENDPOINT=<CLOUD_RUN_ENDPOINT>
@@ -40,6 +36,11 @@ Containers must be built in the following order and use the correct tags:
     // Or update stimuli_ci_app only
     gcloud builds submit --config cloudbuild-update.yml .
 
+  ```
+
+# How to deploy
+- Google Cloud Run
+    ```
     // Deploy docker container
     gcloud run deploy sie-image-processing --image gcr.io/$GCP_PROJECT/stimuli_ci_app:latest
 
@@ -69,8 +70,10 @@ Containers must be built in the following order and use the correct tags:
     --push-endpoint=$CLOUD_RUN_ENDPOINT \
     --push-auth-service-account=sie-cloud-run-pubsub-invoker@$GCP_PROJECT.iam.gserviceaccount.com
 
-    // Create a storage trigger that sends a message to cloud run
+    // Create storage triggers that sends a message to cloud run
     gsutil notification create -t sie-image-processing -f json -e OBJECT_FINALIZE gs://sie-masked-images
+
+    gsutil notification create -t sie-image-processing -f json -e OBJECT_FINALIZE gs://sie-user-selections
 
     // Test
     gsutil cp /path/to/local/file gs://bucket

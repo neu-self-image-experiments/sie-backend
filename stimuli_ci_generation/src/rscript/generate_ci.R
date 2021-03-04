@@ -1,8 +1,5 @@
 #!/usr/bin/env Rscript
 
-# Install reverse correlation toolbox
-install.packages("rcicr", repos="http://R-Forge.R-project.org")
-
 # Load reverse correlation toolbox
 library(rcicr)
 args <- commandArgs(trailingOnly = TRUE)
@@ -21,10 +18,10 @@ groupci <- generateCI2IFC(
     baseimage='mnes', # string specifying the key used in list of base images 
     rdata=rdata, 
     saveasjpeg=FALSE,
-    targetpath = paste(work_dir, "/cis", sep = "")
+    targetpath = paste(work_dir, "/ci", sep = "")
 )
 
 groupci <- autoscale(
     list('groupci'=groupci),
-    targetpath = paste(work_dir, "/cis", sep = "")
+    targetpath = paste(work_dir, "/ci", sep = "")
 )
