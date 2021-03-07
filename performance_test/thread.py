@@ -6,13 +6,12 @@ from google.cloud import storage
 RAW_BUCKET = "sie-raw-images"
 STIMULI_BUCKET = "sie-stimuli-images"
 
-"""
-This is the thread class which uploads image to GCP and record the
-finishing timee for the pipeline.
-"""
 
 class thread:
-
+    """
+    This is the thread class which uploads image to GCP and record the
+    finishing timee for the pipeline.
+    """
 
     def __init__(self, participant_id, sleep_time, start_queue, end_queue, threshold):
         """
@@ -85,8 +84,10 @@ class thread:
 
         storage_client = storage.Client()
         bucket = storage_client.get_bucket(STIMULI_BUCKET)
-        bucket_dir = (f"0000{self.participant_id}" 
-                        if self.participant_id < 10 
-                        else f"000{self.participant_id}")
+        bucket_dir = (
+            f"0000{self.participant_id}" 
+            if self.participant_id < 10 
+            else f"000{self.participant_id}"
+        )
         print(f"Checking on {bucket_dir}/{self.blob_name}")
         return bucket.get_blob(f"{bucket_dir}/{self.blob_name}") is not None
