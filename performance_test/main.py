@@ -45,5 +45,6 @@ def performance_test(num_thread):
 
 if __name__ == "__main__":
 
+
     num_thread = int(sys.argv[1])
     performance_test(num_thread)

@@ -7,17 +7,19 @@ RAW_BUCKET = "sie-raw-images"
 STIMULI_BUCKET = "sie-stimuli-images"
 
 """
-This is the thread class which uploads image to GCP and record the 
+This is the thread class which uploads image to GCP and record the
 finishing timee for the pipeline.
 """
 
 class thread:
+
+
     def __init__(self, participant_id, sleep_time, start_queue, end_queue, threshold):
         """
         The function initializes a thread object.
         Args:
             participant_id: The id of the participant
-            sleep_time: Sleeping time between request to 
+            sleep_time: Sleeping time between request to
                         check whether image processing is finished.
             start_queue: A queue to store the starting time for each thread.
             end_queue: A queue to storee the ending time for each thread.
@@ -35,8 +37,8 @@ class thread:
 
     def run(self, file_dir, file_name):
         """
-        The function runs a thread including steps like upload image to the 
-        sie-raw-image bucket and check if certain image is generated in the 
+        The function runs a thread including steps like upload image to the
+        sie-raw-image bucket and check if certain image is generated in the
         sie-stimuli-image bucket.
         Args:
             file_dir: The local directory of the images location.
@@ -77,7 +79,7 @@ class thread:
         Args:
             None;
         Returns:
-            A boolean value indicating whether the 
+            A boolean value indicating whether the
             image generation is finished;
         """
 
