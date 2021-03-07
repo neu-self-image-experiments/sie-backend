@@ -1,4 +1,4 @@
-FROM gcr.io/cs6510-spr2021/stimuli_ci_base
+FROM stimuli_ci_base
 
 # Allow statements and log messages to immediately appear in the Cloud Run logs
 ENV PYTHONUNBUFFERED True
