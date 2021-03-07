@@ -9,6 +9,14 @@ FILE_DIR = "./test_data/"
 
 
 def performance_test(num_thread):
+    """
+    The function does performance test on the pipeline with multithread.
+    It also computes the throughput of the pipeline.
+    Args:
+        num_thread: The number of threads to execute.
+    Returns:
+        None;
+    """
     # To record the start and end times for each thread
     start_queue = queue.Queue()
     end_queue = queue.Queue()
@@ -36,5 +44,6 @@ def performance_test(num_thread):
     )
 
 if __name__ == "__main__":
+
     num_thread = int(sys.argv[1])
     performance_test(num_thread)
