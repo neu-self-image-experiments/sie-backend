@@ -22,8 +22,7 @@ class thread:
                         check whether image processing is finished.
             start_queue: A queue to store the starting time for each thread.
             end_queue: A queue to storee the ending time for each thread.
-            threshold: A threshold to determine whether image processing 
-                       is finished.
+            threshold: A threshold to determine whether image processing is finished.
         Returns:
             None;
         """
@@ -85,8 +84,8 @@ class thread:
         storage_client = storage.Client()
         bucket = storage_client.get_bucket(STIMULI_BUCKET)
         bucket_dir = (
-            f"0000{self.participant_id}" 
-            if self.participant_id < 10 
+            f"0000{self.participant_id}"
+            if self.participant_id < 10
             else f"000{self.participant_id}"
         )
         print(f"Checking on {bucket_dir}/{self.blob_name}")
