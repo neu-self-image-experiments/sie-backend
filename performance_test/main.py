@@ -1,5 +1,6 @@
-import thread
+from thread import thread
 import queue
+import sys
 
 from concurrent.futures import ThreadPoolExecutor
 
@@ -15,8 +16,9 @@ def performance_test(num_thread):
     with ThreadPoolExecutor(max_workers=num_thread) as executor:
 
         for i in range(num_thread):
-            t = thread(i, SLEEP_TIME, start_queue, end_queue)
-            executor.submit(t.run, (FILE_DIR, str(i) + ".jpg"))
+            t = thread(i + 1, SLEEP_TIME, start_queue, end_queue, 50)
+            file_name = f"0000{i + 1}" if i < 9 else f"000{i + 1}"
+            executor.submit(t.run, FILE_DIR, f"{file_name}.jpg")
 
     min_start_time = start_queue.get()
     max_end_time = end_queue.get()
@@ -32,3 +34,7 @@ def performance_test(num_thread):
             float((max_end_time - min_start_time) / num_thread)
         )
     )
+
+if __name__ == "__main__":
+    num_thread = int(sys.argv[1])
+    performance_test(num_thread)
