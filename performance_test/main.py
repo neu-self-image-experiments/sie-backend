@@ -1,8 +1,9 @@
-from thread import thread
 import queue
 import sys
+import time
 
 from concurrent.futures import ThreadPoolExecutor
+from PipelineRunnable import PipelineRunnable
 
 SLEEP_TIME = 2
 
@@ -13,28 +14,26 @@ def performance_test(num_thread, file_dir, threshold):
     It also computes the throughput of the pipeline.
     Args:
         num_thread: The number of threads to execute.
+        file_dir: The directory contians images.
+        threshold: A threshold to determine whether image processing is finished.
     Returns:
         None;
     """
     # To record the start and end times for each thread
-    start_queue = queue.Queue()
-    end_queue = queue.Queue()
+    min_start_time = time.time()
+    max_end_time = time.time()
+    futures = []
 
     with ThreadPoolExecutor(max_workers=num_thread) as executor:
 
         for i in range(num_thread):
-            t = thread(i + 1, SLEEP_TIME, start_queue, end_queue, threshold)
+            pipeline_runnable = PipelineRunnable(i + 1, SLEEP_TIME, threshold)
             file_name = f"0000{i + 1}" if i < 9 else f"000{i + 1}"
-            executor.submit(t.run, file_dir, f"{file_name}.jpg")
-
-    min_start_time = start_queue.get()
-    max_end_time = end_queue.get()
-
-    while start_queue.empty() is False:
-        min_start_time = min(min_start_time, start_queue.get())
-
-    while end_queue.empty() is False:
-        max_end_time = max(max_end_time, end_queue.get())
+            futures.append(executor.submit(pipeline_runnable.run, file_dir, f"{file_name}.jpg"))
+            
+    for future in futures:
+        min_start_time = min(min_start_time, future.result()[0])
+        max_end_time = max(max_end_time, future.result()[1])
 
     print(
         "The resulting throughput of the program is {}".format(

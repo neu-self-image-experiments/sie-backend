@@ -7,13 +7,13 @@ RAW_BUCKET = "sie-raw-images"
 STIMULI_BUCKET = "sie-stimuli-images"
 
 
-class thread:
+class PipelineRunnable:
     """
     This is the thread class which uploads image to GCP and record the
     finishing timee for the pipeline.
     """
 
-    def __init__(self, participant_id, sleep_time, start_queue, end_queue, threshold):
+    def __init__(self, participant_id, sleep_time, threshold):
         """
         The function initializes a thread object.
         Args:
@@ -28,9 +28,12 @@ class thread:
         """
         self.participant_id = participant_id
         self.sleep_time = sleep_time
-        self.start_queue = start_queue
-        self.end_queue = end_queue
-        self.threshold = "0" + str(threshold) if threshold < 100 else str(threshold)
+        if threshold < 10:
+            self.threshold = "00" + str(threshold)
+        elif threshold < 100:
+            self.threshold = "0" + str(threshold)
+        else:
+            self.threshold = str(threshold)
         self.blob_name = f"rcic_mnes_1_00{self.threshold}_ori.jpg"
 
     def run(self, file_dir, file_name):
@@ -45,16 +48,15 @@ class thread:
             None;
         """
         start_time = time.time()
-        self.start_queue.put(start_time)
         print(f"Start uploading image: {file_name}")
         self.upload_image(file_dir, file_name)
         print(f"Finish uploading image: {file_name}")
 
-        while self.check_finish() is False:
+        while not self.check_finish():
             time.sleep(self.sleep_time)
 
         end_time = time.time()
-        self.end_queue.put(end_time)
+        return start_time, end_time
 
     def upload_image(self, file_dir, file_name):
         """
