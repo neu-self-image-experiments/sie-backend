@@ -8,6 +8,7 @@ publisher = pubsub_v1.PublisherClient()
 
 # Configure the retry settings. Defaults shown in comments are values applied
 # by the library by default, instead of default values in the Retry object.
+# doc: https://cloud.google.com/pubsub/docs/publisher
 custom_retry = api_core.retry.Retry(
     initial=0.250,  # seconds (default: 0.1)
     maximum=90.0,  # seconds (default: 60.0)
