@@ -46,4 +46,6 @@ def performance_test(num_thread, file_dir, threshold):
 if __name__ == "__main__":
 
     num_thread = int(sys.argv[1])
-    performance_test(num_thread)
+    file_dir = sys.argv[2]
+    threshold = int(sys.argv[3])
+    performance_test(num_thread, file_dir, threshold)
