@@ -60,9 +60,7 @@ def generate_ci(participant_id, file_name):
 
     if not os.path.exists(f"{ws_dir}/stimuli"):
         mkdir(participant_id, "stimuli")
-        download_dir(
-            gcp_config.STIMULI_IMG_BUCKET, participant_id, f"{ws_dir}/stimuli"
-        )
+        download_dir(gcp_config.STIMULI_IMG_BUCKET, participant_id, f"{ws_dir}/stimuli")
         print(f"downloaded stimuli images to {ws_dir}/stimuli")
 
     download_file(
