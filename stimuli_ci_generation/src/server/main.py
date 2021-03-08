@@ -7,7 +7,10 @@ import os
 import base64
 import json
 
+from server.pubsub import pub_msg
 from server.stimuli_ci import generate_stimuli, generate_ci
+
+from gcp_config import SIE_IMG_PROCESSING_RESULT
 
 app = Flask(__name__)
 
@@ -63,7 +66,8 @@ def index():
         else:
             try:
                 generate_stimuli(participant_id, file_name)
-                return ("Generating stimuli images...", 202)
+                pub_msg("Stimuli generated", SIE_IMG_PROCESSING_RESULT, participant_id)
+                return ("Stimuli generated", 202)
             except Exception as e:
                 print(e)
                 return ("Failed to generate stimuli", 204)
