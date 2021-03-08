@@ -25,17 +25,32 @@ custom_retry = api_core.retry.Retry(
 )
 
 
-def get_callback(f, data):
-    def callback(f):
+def get_callback(future, data):
+    """
+    Handle callback from msg publishing
+    Args:
+        future: future object
+        data: published message
+    """
+
+    def callback(future):
         try:
-            print(f.result())
+            print(future.result())
         except:  # noqa
-            print("Please handle {} for {}.".format(f.exception(), data))
+            print("Please handle {} for {}.".format(future.exception(), data))
 
     return callback
 
 
 def pub_msg(msg: str, topic_id, participant_id: str):
+    """
+    Publish a message to a pubsub topic
+    Args:
+        msg: message to be published
+        topic_id: pubsub topic id
+        participant_id: participant id
+    """
+
     data = msg.encode("utf-8")
     topic_path = publisher.topic_path(PROJECT_ID, topic_id)
     future = publisher.publish(
