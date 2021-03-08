@@ -7,7 +7,7 @@ from concurrent.futures import ThreadPoolExecutor
 SLEEP_TIME = 2
 
 
-def performance_test(num_thread, file_dir):
+def performance_test(num_thread, file_dir, threshold):
     """
     The function does performance test on the pipeline with multithread.
     It also computes the throughput of the pipeline.
@@ -23,7 +23,7 @@ def performance_test(num_thread, file_dir):
     with ThreadPoolExecutor(max_workers=num_thread) as executor:
 
         for i in range(num_thread):
-            t = thread(i + 1, SLEEP_TIME, start_queue, end_queue, 50)
+            t = thread(i + 1, SLEEP_TIME, start_queue, end_queue, threshold)
             file_name = f"0000{i + 1}" if i < 9 else f"000{i + 1}"
             executor.submit(t.run, file_dir, f"{file_name}.jpg")
 
