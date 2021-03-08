@@ -35,7 +35,6 @@ def face_check(face):
         raise exceptions.InvalidFaceImage(
             "Please make sure your image has neutral facial expression."
         )
-
     if face.under_exposed_likelihood > constants.LIGHTING_THRESHOLD:
         raise exceptions.InvalidFaceImage("Please make sure your image is well-lit.")
 
@@ -68,7 +67,6 @@ def face_detection(uri):
         or returns an errors resonse in string format
     """
     vision_client = vision.ImageAnnotatorClient()
-
     image = vision.Image()
     image.source.image_uri = uri
 
@@ -162,13 +160,16 @@ def process_img(
     returns:
         str: file path of the processed image
     """
-
     img = cv2.imread(path)
 
+    # cv2.imshow('image', img)
     # create mask
+    # print(img.shape[0])
     mask = create_mask(
         img.shape[0], img.shape[1], mid_eyes, nose, left_ear, right_ear, chin
     )
+    print("mask")
+    print(mask)
 
     # apply mask
     masked_img = cv2.bitwise_and(img, mask)
@@ -186,12 +187,12 @@ def process_img(
         bottom_right_y = int(bottom_right_y) + int(make_square)
 
     # Make the background color grey
-
     # naive fix for linting error: line getting to long ->
     crop_img = masked_img[top_left_y:bottom_right_y, top_left_x:bottom_right_x].copy()
     crop_img[np.where((crop_img == [0, 0, 0]).all(axis=2))] = [140, 141, 137]
 
     # Convert to Grayscale
+
     gray_img = cv2.cvtColor(crop_img, cv2.COLOR_BGR2GRAY)
 
     # resize
@@ -404,7 +405,7 @@ def upload_processed_images(bucket_name, source_file_folder):
 
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
-
+    print(bucket_name + ' :bucket name')
     for file_name in os.listdir(source_file_folder):
         blob = bucket.blob(file_name)
         blob.upload_from_filename(os.path.join(source_file_folder, file_name))

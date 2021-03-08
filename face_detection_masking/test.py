@@ -11,6 +11,7 @@ def test_upload_processed_images(request):
     Returns:
         String if all assertion passed;
     """
+    # print(request)
     request_args = request.args
     bucket_name = request_args["bucket_name"]
     source_file_folder = request_args["source_file_folder"]

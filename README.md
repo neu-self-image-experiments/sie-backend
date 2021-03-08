@@ -120,7 +120,7 @@ To setup your local env, you will need to install Python 3.6+ and Google SDK in 
     5. ```cd scripts```
     6. Enter ```chmod +x run-local-script.sh``` to give it executable access.
     7. Enter ```chmod +x test-local-http.sh``` to give it executable access.
-    6. Pass this command on the terminal ```./run-local-script.sh``` . This makes sure that the function is being served at the port 4000 defined by FUNCTION_PORT_HTTP environment variable sourced from the .env.local file
+    6. Pass this command on the terminal ```./run-local-http.sh``` . This makes sure that the function is being served at the port 4000 defined by FUNCTION_PORT_HTTP environment variable sourced from the .env.local file
     7. Open a new terminal on the side and pass the command ```./test-local-http.sh ```. This will run the function to be tested.
 
 ## Contribution policy
@@ -159,9 +159,11 @@ Reviewers are expected to actually take time to inspect the reviewee's work and 
 ## Test Guidelines
 
 ### Prerequisite
-Please write unit tests into the target function's folder and name it test.py. If test.py already exist, just add your unit tests into the file. 
+
+Please write unit tests into the target function's folder and name it test.py. If test.py already exist, just add your unit tests into the file.
 
 In order to do the unit test, functions-framework should be installed initally. You can run the following command to install functions-framework
+
 ```
 pip install functions-framework
 ```
@@ -171,14 +173,17 @@ For more information regarding functions-framework please refer to: https://gith
 Also, please make sure you already have a credential file inside env/ folder. For setting environment variable please refer to: https://cloud.google.com/docs/authentication/getting-started#setting_the_environment_variable
 
 ### Creating your unit test
+
 For more information regarding writing a unit test, please follow the guidlines on Testing HTTP Functions for unit test: https://cloud.google.com/functions/docs/testing/test-http#unit_tests
 
 You can run your test with following commmand (Please make sure you are in the right directory)
+
 ```
 functions-framework --source=test.py --target=THE_NAME_FOR_UNIT_TEST_FUNCTION
 ```
 
 ### Sending a HTTP request
+
 Finally, make a HTTP request to default address http://0.0.0.0:8080 via Postman. You can also send parameter with a HTTP request.
 
 For more information about how to use Postman or how to pass paramter with a HTTP request via Postman, please refer to: https://learning.postman.com/docs/sending-requests/requests/
