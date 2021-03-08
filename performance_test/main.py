@@ -1,4 +1,3 @@
-import queue
 import sys
 import time
 
@@ -29,8 +28,10 @@ def performance_test(num_thread, file_dir, threshold):
         for i in range(num_thread):
             pipeline_runnable = PipelineRunnable(i + 1, SLEEP_TIME, threshold)
             file_name = f"0000{i + 1}" if i < 9 else f"000{i + 1}"
-            futures.append(executor.submit(pipeline_runnable.run, file_dir, f"{file_name}.jpg"))
-            
+            futures.append(
+                executor.submit(pipeline_runnable.run, file_dir, f"{file_name}.jpg")
+            )
+
     for future in futures:
         min_start_time = min(min_start_time, future.result()[0])
         max_end_time = max(max_end_time, future.result()[1])
