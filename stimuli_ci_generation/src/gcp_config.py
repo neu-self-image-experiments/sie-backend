@@ -1,6 +1,11 @@
 #!/usr/bin/python3
 
 """
+    Project level config
+"""
+PROJECT_ID = "cs6510-spr2021"
+
+"""
     Bucket names configured on gcp cloud storage for this project
 """
 RAW_IMG_BUCKET = "sie-raw-images"

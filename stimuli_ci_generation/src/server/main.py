@@ -52,9 +52,12 @@ def index():
             print(f"error: {msg}")
             return f"Bad Request: {msg}", 400
 
-        file_identifier = data["name"]  # should be participant_id/neutral.jpg
+        file_identifier = data[
+            "name"
+        ]  # should be participant_id-experiment_id/neutral.jpg
         print("file_identifier:", file_identifier)
-        participant_id, file_name = file_identifier.split("/")
+        user_id, file_name = file_identifier.split("/")
+        participant_id, experiment_id = user_id.split("-")
         file_type = file_name.split(".")[-1]
 
         if file_type.lower() == "csv":
@@ -66,7 +69,12 @@ def index():
         else:
             try:
                 generate_stimuli(participant_id, file_name)
-                pub_msg("Stimuli generated", SIE_IMG_PROCESSING_RESULT, participant_id)
+                pub_msg(
+                    "Completed",
+                    SIE_IMG_PROCESSING_RESULT,
+                    participant_id,
+                    experiment_id,
+                )
                 return ("Stimuli generated", 202)
             except Exception as e:
                 print(e)

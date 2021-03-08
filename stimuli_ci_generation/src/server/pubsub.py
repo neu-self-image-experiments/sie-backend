@@ -1,8 +1,9 @@
 from google.cloud import pubsub_v1
 from google import api_core
 
+from gcp_config import PROJECT_ID
 
-PROJECT_ID = "cs6510-spr2021"
+
 publisher = pubsub_v1.PublisherClient()
 
 
@@ -43,18 +44,23 @@ def get_callback(future, data):
     return callback
 
 
-def pub_msg(msg: str, topic_id, participant_id: str):
+def pub_msg(msg: str, topic_id: str, participant_id: str, experiment_id: str):
     """
     Publish a message to a pubsub topic
     Args:
         msg: message to be published
         topic_id: pubsub topic id
         participant_id: participant id
+        experiment_id: experiment_id
     """
 
     data = msg.encode("utf-8")
     topic_path = publisher.topic_path(PROJECT_ID, topic_id)
     future = publisher.publish(
-        topic_path, data, participant_id=participant_id, retry=custom_retry
+        topic_path,
+        data,
+        participant_id=participant_id,
+        experiment_id=experiment_id,
+        retry=custom_retry,
     )
     future.add_done_callback(get_callback(future, data))
