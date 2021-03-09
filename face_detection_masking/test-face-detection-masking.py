@@ -1,5 +1,6 @@
 import unittest
 import unittest.mock
+import numpy as np
 
 import main
 import exceptions
@@ -90,8 +91,14 @@ class TestFaceDetection(unittest.TestCase):
         assert rightEar == result[7]
         assert chin == result[8]
 
-    def test_process_image(self):
-        uri = "https://t4.ftcdn.net/jpg/02/46/14/93/360_F_246149382_KHkt8Mw8pptlmVuiqmhavvHBC4SEqBu1.jpg"
+    # def test_process_image(self):
+    #     uri = "https://t4.ftcdn.net/jpg/02/46/14/93/360_F_246149382_KHkt8Mw8pptlmVuiqmhavvHBC4SEqBu1.jpg"
 
-        print(main.process_img(uri, 134, 24, 333, 255, (228, 133),
-                               (230, 168), (169, 163), (300, 147), (237, 235)))
+    #     print(main.process_img(uri, 134, 24, 333, 255, (228, 133),
+    #                            (230, 168), (169, 163), (300, 147), (237, 235)))
+
+    def test_create_mask(self):
+        masked_array = main.create_mask(360, 512, (228, 133), (230, 168), (169, 163), (300, 147), (237, 235))
+        expected_array = np.load('test_assets/masked_array.npy')
+        assert (expected_array == masked_array).all()
+    
