@@ -7,7 +7,10 @@ import os
 import base64
 import json
 
+from server.pubsub import pub_msg
 from server.stimuli_ci import generate_stimuli, generate_ci
+
+from gcp_config import SIE_IMG_PROCESSING_RESULT
 
 app = Flask(__name__)
 
@@ -49,21 +52,35 @@ def index():
             print(f"error: {msg}")
             return f"Bad Request: {msg}", 400
 
-        file_identifier = data["name"]  # should be participant_id/neutral.jpg
+        file_identifier = data[
+            "name"
+        ]  # should be participant_id-experiment_id/neutral.jpg
         print("file_identifier:", file_identifier)
-        participant_id, file_name = file_identifier.split("/")
+        user_id, file_name = file_identifier.split("/")
+        participant_id, experiment_id = user_id.split("-")
         file_type = file_name.split(".")[-1]
 
+        # returning 2xx here to ack pub/sub msg
+        # or else storage trigger will keep retrying
         if file_type.lower() == "csv":
+            # this is for after participants finishes with their img selections
             try:
                 generate_ci(participant_id, file_name)
                 return ("Generating ci images...", 202)
             except Exception:
                 return ("Failed to generate ci", 204)
         else:
+            # this is for after participants upload their images
+            # and the images pass facial detection
             try:
                 generate_stimuli(participant_id, file_name)
-                return ("Generating stimuli images...", 202)
+                pub_msg(
+                    "Completed",
+                    SIE_IMG_PROCESSING_RESULT,
+                    participant_id,
+                    experiment_id,
+                )
+                return ("Stimuli generated", 202)
             except Exception as e:
                 print(e)
                 return ("Failed to generate stimuli", 204)
