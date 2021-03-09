@@ -94,13 +94,22 @@ class TestFaceDetection(unittest.TestCase):
     def test_process_image(self):
         full_image_path = "test_assets/ori.jpg"
         expected_image_path = "test_assets/final_expected.jpg"
-        test_image_path = main.process_img(full_image_path, 134, 24, 333, 255, (228, 133),
-                               (230, 168), (169, 163), (300, 147), (237, 235))
-        
-        expected_matrix = cv2.imread(expected_image_path) # Load expected image
-        test_matrix = cv2.imread(test_image_path) # Load test produced image
-        assert (expected_matrix == test_matrix).all() # compare both arrays
+        test_image_path = main.process_img(
+            full_image_path,
+            134,
+            24,
+            333,
+            255,
+            (228, 133),
+            (230, 168),
+            (169, 163),
+            (300, 147),
+            (237, 235),
+        )
 
+        expected_matrix = cv2.imread(expected_image_path)  # Load expected image
+        test_matrix = cv2.imread(test_image_path)  # Load test produced image
+        assert (expected_matrix == test_matrix).all()  # compare both arrays
 
     def test_create_mask(self):
         masked_array = main.create_mask(
