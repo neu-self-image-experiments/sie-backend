@@ -6,10 +6,10 @@ from concurrent.futures import ThreadPoolExecutor
 from PipelineRunnable import PipelineRunnable
 
 SLEEP_TIME = 2
-'''
+"""
 Defualt dirctory to store images, please make sure it
 is ignored
-'''
+"""
 FILE_DIR = './test_data/'
 
 
