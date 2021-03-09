@@ -10,7 +10,7 @@ SLEEP_TIME = 2
 Defualt dirctory to store images, please make sure it
 is ignored
 '''
-FILE_DIR = './test_data/' 
+FILE_DIR = './test_data/'
 
 
 def performance_test(num_thread, file_dir, threshold):
