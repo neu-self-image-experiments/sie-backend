@@ -193,6 +193,10 @@ def process_img(
     # resize
     final_img = resize(gray_img)
 
+    # temp directory to store images
+    if not os.path.exists(constants.TEMP_DIR[1:]):
+        os.makedirs(constants.TEMP_DIR[1:])
+
     # Save processed image to local dir
     processed_file_path = (
         os.getcwd() + f"{constants.TEMP_DIR}/{constants.PROCESSED_IMAGE}"
