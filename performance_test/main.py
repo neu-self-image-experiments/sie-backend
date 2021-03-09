@@ -3,7 +3,7 @@ import time
 import os
 
 from concurrent.futures import ThreadPoolExecutor
-from PipelineRunnable import PipelineRunnable
+from pipeline_runnable import PipelineRunnable
 
 SLEEP_TIME = 2
 FILE_DIR = "./test_data/"
