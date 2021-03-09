@@ -1,10 +1,16 @@
 import sys
 import time
+import os
 
 from concurrent.futures import ThreadPoolExecutor
 from PipelineRunnable import PipelineRunnable
 
 SLEEP_TIME = 2
+'''
+Defualt dirctory to store images, please make sure it
+is ignored
+'''
+FILE_DIR = './test_data/' 
 
 
 def performance_test(num_thread, file_dir, threshold):
@@ -22,6 +28,9 @@ def performance_test(num_thread, file_dir, threshold):
     min_start_time = time.time()
     max_end_time = time.time()
     futures = []
+
+    if not os.path.isdir(file_dir):
+        file_dir = FILE_DIR
 
     with ThreadPoolExecutor(max_workers=num_thread) as executor:
 
