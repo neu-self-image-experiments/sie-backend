@@ -60,13 +60,18 @@ def index():
         participant_id, experiment_id = user_id.split("-")
         file_type = file_name.split(".")[-1]
 
+        # returning 2xx here to ack pub/sub msg
+        # or else storage trigger will keep retrying
         if file_type.lower() == "csv":
+            # this is for after participants finishes with their img selections
             try:
                 generate_ci(participant_id, file_name)
                 return ("Generating ci images...", 202)
             except Exception:
                 return ("Failed to generate ci", 204)
         else:
+            # this is for after participants upload their images 
+            # and the images pass facial detection
             try:
                 generate_stimuli(participant_id, file_name)
                 pub_msg(
