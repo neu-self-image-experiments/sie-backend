@@ -112,8 +112,8 @@ class TestFaceDetection(unittest.TestCase):
         assert (expected_matrix == test_matrix).all()  # compare both arrays
 
     def test_create_mask(self):
-        masked_array = main.create_mask(
+        masked_matrix = main.create_mask(
             360, 512, (228, 133), (230, 168), (169, 163), (300, 147), (237, 235)
         )
-        expected_array = np.load("test_assets/masked_array.npy")
-        assert (expected_array == masked_array).all()
+        expected_matrix = np.load("test_assets/masked_array.npy")
+        assert (expected_matrix == masked_matrix).all()
