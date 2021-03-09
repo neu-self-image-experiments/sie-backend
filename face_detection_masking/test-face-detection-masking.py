@@ -7,7 +7,6 @@ import exceptions
 
 
 class TestFaceDetection(unittest.TestCase):
-
     def test_smiling_face(self):
         uri = "https://image.freepik.com/free-photo/smiling-man-face-white-background_33839-3342.jpg"
         try:
@@ -15,9 +14,9 @@ class TestFaceDetection(unittest.TestCase):
         except exceptions.InvalidFaceImage:
             pass
         except Exception:
-            self.fail('unexpected exception raised')
+            self.fail("unexpected exception raised")
         else:
-            self.fail('ExpectedException not raised')
+            self.fail("ExpectedException not raised")
 
     def test_facing_not_camera(self):
 
@@ -27,9 +26,9 @@ class TestFaceDetection(unittest.TestCase):
         except exceptions.InvalidFaceImage:
             pass
         except Exception:
-            self.fail('unexpected exception raised')
+            self.fail("unexpected exception raised")
         else:
-            self.fail('ExpectedException not raised')
+            self.fail("ExpectedException not raised")
 
     def test_tilted_face(self):
         uri = "https://westsidetoastmasters.com/resources/book_of_body_language/images/233-head_tilt.jpg"
@@ -38,9 +37,9 @@ class TestFaceDetection(unittest.TestCase):
         except exceptions.InvalidFaceImage:
             pass
         except Exception:
-            self.fail('unexpected exception raised')
+            self.fail("unexpected exception raised")
         else:
-            self.fail('ExpectedException not raised')
+            self.fail("ExpectedException not raised")
 
     def test_low_light_photo(self):
 
@@ -50,9 +49,9 @@ class TestFaceDetection(unittest.TestCase):
         except exceptions.InvalidFaceImage:
             pass
         except Exception:
-            self.fail('unexpected exception raised')
+            self.fail("unexpected exception raised")
         else:
-            self.fail('ExpectedException not raised')
+            self.fail("ExpectedException not raised")
 
     def test_multiple_face_in_photo(self):
 
@@ -62,9 +61,9 @@ class TestFaceDetection(unittest.TestCase):
         except exceptions.InvalidFaceImage:
             pass
         except Exception:
-            self.fail('unexpected exception raised')
+            self.fail("unexpected exception raised")
         else:
-            self.fail('ExpectedException not raised')
+            self.fail("ExpectedException not raised")
 
     def test_neutral_face(self):
         uri = "https://t4.ftcdn.net/jpg/02/46/14/93/360_F_246149382_KHkt8Mw8pptlmVuiqmhavvHBC4SEqBu1.jpg"
@@ -98,7 +97,8 @@ class TestFaceDetection(unittest.TestCase):
     #                            (230, 168), (169, 163), (300, 147), (237, 235)))
 
     def test_create_mask(self):
-        masked_array = main.create_mask(360, 512, (228, 133), (230, 168), (169, 163), (300, 147), (237, 235))
-        expected_array = np.load('test_assets/masked_array.npy')
+        masked_array = main.create_mask(
+            360, 512, (228, 133), (230, 168), (169, 163), (300, 147), (237, 235)
+        )
+        expected_array = np.load("test_assets/masked_array.npy")
         assert (expected_array == masked_array).all()
-    

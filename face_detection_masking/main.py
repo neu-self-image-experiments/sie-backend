@@ -194,7 +194,9 @@ def process_img(
     final_img = resize(gray_img)
 
     # Save processed image to local dir
-    processed_file_path = os.getcwd() + f"{constants.TEMP_DIR}/{constants.PROCESSED_IMAGE}"
+    processed_file_path = (
+        os.getcwd() + f"{constants.TEMP_DIR}/{constants.PROCESSED_IMAGE}"
+    )
     cv2.imwrite(processed_file_path, final_img)
     return processed_file_path
 
@@ -402,7 +404,7 @@ def upload_processed_images(bucket_name, source_file_folder):
 
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
-    print(bucket_name + ' :bucket name')
+    print(bucket_name + " :bucket name")
     for file_name in os.listdir(source_file_folder):
         blob = bucket.blob(file_name)
         blob.upload_from_filename(os.path.join(source_file_folder, file_name))
