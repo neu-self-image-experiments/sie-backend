@@ -162,15 +162,10 @@ def process_img(
     """
     img = cv2.imread(path)
 
-    # cv2.imshow('image', img)
     # create mask
-    # print(img.shape[0])
     mask = create_mask(
         img.shape[0], img.shape[1], mid_eyes, nose, left_ear, right_ear, chin
     )
-    print("mask")
-    print(mask)
-
     # apply mask
     masked_img = cv2.bitwise_and(img, mask)
 
@@ -199,7 +194,7 @@ def process_img(
     final_img = resize(gray_img)
 
     # Save processed image to local dir
-    processed_file_path = f"{constants.TEMP_DIR}/{constants.PROCESSED_IMAGE}"
+    processed_file_path = os.getcwd() + f"{constants.TEMP_DIR}/{constants.PROCESSED_IMAGE}"
     cv2.imwrite(processed_file_path, final_img)
     return processed_file_path
 
@@ -284,13 +279,14 @@ def detect_and_process(uri):
         # Example URI when testing locally:
         # http://localhost:${FUNCTION_PORT_HTTP}/?subject=https://images.pexels.com/
         # photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940
-        url = uri.args.get("subject")
+        # url = uri.args.get("subject")
+        url = uri
 
         results = face_detection(url)
         # temp directory to store images
-        if not os.path.exists(constants.TEMP_DIR):
-            os.makedirs(constants.TEMP_DIR)
-        download_to = os.getcwd() + f"/{constants.TEMP_DIR}/{constants.SOURCE_IMAGE}"
+        if not os.path.exists(constants.TEMP_DIR[1:]):
+            os.makedirs(constants.TEMP_DIR[1:])
+        download_to = os.getcwd() + f"{constants.TEMP_DIR}/{constants.SOURCE_IMAGE}"
 
         # valid face
         topLeft_x, topLeft_y, bottomRight_x, bottomRight_y = (
@@ -328,6 +324,7 @@ def detect_and_process(uri):
     except exceptions.InvalidFaceImage as err:
         return str(err), 400
     except Exception as err:
+        traceback.print_exception(*sys.exc_info())
         return str(err), 500
 
     return "Processed Sucessfully!", 200
