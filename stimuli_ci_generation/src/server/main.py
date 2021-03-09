@@ -70,7 +70,7 @@ def index():
             except Exception:
                 return ("Failed to generate ci", 204)
         else:
-            # this is for after participants upload their images 
+            # this is for after participants upload their images
             # and the images pass facial detection
             try:
                 generate_stimuli(participant_id, file_name)
