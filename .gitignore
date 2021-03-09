@@ -116,6 +116,8 @@ venv.bak/
 .DS_Store/
 scripts/
 temp/
+tmp/
+face_detection_masking/tmp/
 .vscode/
 
 # Spyder project settings
