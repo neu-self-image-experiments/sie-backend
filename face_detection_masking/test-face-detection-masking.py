@@ -9,7 +9,10 @@ import exceptions
 
 class TestFaceDetection(unittest.TestCase):
     def test_smiling_face(self):
-        uri = "https://image.freepik.com/free-photo/smiling-man-face-white-background_33839-3342.jpg"
+        uri = (
+            "https://image.freepik.com/free-photo/"
+            "smiling-man-face-white-background_33839-3342.jpg"
+        )
         try:
             main.face_detection(uri)
         except exceptions.InvalidFaceImage:
@@ -21,7 +24,11 @@ class TestFaceDetection(unittest.TestCase):
 
     def test_facing_not_camera(self):
 
-        uri = "https://media.istockphoto.com/photos/man-with-a-view-of-the-future-picture-id531734671?k=6&m=531734671&s=612x612&w=0&h=VNGtQIl7hK1a6wFEB--uz7ADa3UuIYeaw-hCNrrullU="
+        uri = (
+            "https://media.istockphoto.com/photos/man-with-a-"
+            "view-of-the-future-picture-id531734671?k=6&m=531734671&s="
+            "612x612&w=0&h=VNGtQIl7hK1a6wFEB--uz7ADa3UuIYeaw-hCNrrullU="
+        )
         try:
             main.face_detection(uri)
         except exceptions.InvalidFaceImage:
@@ -32,7 +39,10 @@ class TestFaceDetection(unittest.TestCase):
             self.fail("ExpectedException not raised")
 
     def test_tilted_face(self):
-        uri = "https://westsidetoastmasters.com/resources/book_of_body_language/images/233-head_tilt.jpg"
+        uri = (
+            "https://westsidetoastmasters.com/resources/book_of_"
+            "body_language/images/233-head_tilt.jpg"
+        )
         try:
             main.face_detection(uri)
         except exceptions.InvalidFaceImage:
@@ -44,7 +54,10 @@ class TestFaceDetection(unittest.TestCase):
 
     def test_low_light_photo(self):
 
-        uri = "https://64.media.tumblr.com/0a2c59e9b675e8d11a2fca8398150d7f/tumblr_oaevfwGlQL1up31rro1_1280.jpg"
+        uri = (
+            "https://64.media.tumblr.com/0a2c59e9b675e8d11a2fca8398150"
+            "d7f/tumblr_oaevfwGlQL1up31rro1_1280.jpg"
+        )
         try:
             main.face_detection(uri)
         except exceptions.InvalidFaceImage:
@@ -67,7 +80,10 @@ class TestFaceDetection(unittest.TestCase):
             self.fail("ExpectedException not raised")
 
     def test_neutral_face(self):
-        uri = "https://t4.ftcdn.net/jpg/02/46/14/93/360_F_246149382_KHkt8Mw8pptlmVuiqmhavvHBC4SEqBu1.jpg"
+        uri = (
+            "https://t4.ftcdn.net/jpg/02/46/14/93/360_F_246149382_"
+            "KHkt8Mw8pptlmVuiqmhavvHBC4SEqBu1.jpg"
+        )
 
         vertex1 = 134
         vertex2 = 24
