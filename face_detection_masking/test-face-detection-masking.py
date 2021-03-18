@@ -79,6 +79,19 @@ class TestFaceDetection(unittest.TestCase):
         else:
             self.fail("ExpectedException not raised")
 
+    def test_no_face_in_photo(self):
+        uri = (
+            "https://cdn.insidesport.co/wp-content/uploads/" "2020/10/07193932/fifa.jpg"
+        )
+        try:
+            main.face_detection(uri)
+        except exceptions.InvalidFaceImage:
+            pass
+        except Exception:
+            self.fail("unexpected exception raised")
+        else:
+            self.fail("ExpectedException not raised")
+
     def test_neutral_face(self):
         uri = (
             "https://t4.ftcdn.net/jpg/02/46/14/93/360_F_246149382_"

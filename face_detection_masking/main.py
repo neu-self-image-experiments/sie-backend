@@ -63,8 +63,9 @@ def face_detection(uri):
     Args:
         uri: the file located in Google Cloud Storage or the web
     returns:
-        None: Prints the likelihood of the face expressions
-        or returns an errors resonse in string format
+        list: face annotations (top_left_x, top_left_y, bottom_right_x,
+        bottom_right_y, mid_eyes, nose, left_ear, right_ear, chin)
+        Or returns an errors response in string format
     """
     vision_client = vision.ImageAnnotatorClient()
     image = vision.Image()
