@@ -1,5 +1,8 @@
 from flask import escape
 
+from pubsub import pub_msg
+from gcp_config import SIE_QUALTRICS_CONSENT
+
 PARTICIPANT_ID_FIELD = "participant_id"
 EXPERIMENT_ID_FIELD = "experiment_id"
 RESPONSE_FIELD = "response"
@@ -24,5 +27,15 @@ def catch_qualtrics_requests(request):
     print(participant_id)
     print(experiment_id)
     print(response)
+
+    try:
+        pub_msg(
+            response,
+            SIE_QUALTRICS_CONSENT,
+            participant_id,
+            experiment_id,
+        )
+    except Exception as e:
+        print(e)
 
     return "Hello {}!".format(escape(participant_id))
