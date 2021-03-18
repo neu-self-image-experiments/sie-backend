@@ -3,19 +3,8 @@ steps:
   args:
     - functions
     - deploy
-    - hello_http
+    - catch_quatrics_requests
     - --region=us-central1
-    - --source=./helloworld
+    - --source=./qualtrics_server
     - --trigger-http
     - --allow-unauthenticated
-
-- name: 'gcr.io/cloud-builders/gcloud'
-  args:
-    - functions
-    - deploy
-    - trigger_event
-    - --runtime=python38
-    - --region=us-central1
-    - --source=./image-processing
-    - --trigger-resource=sie-raw-images
-    - --trigger-event=google.storage.object.finalize
