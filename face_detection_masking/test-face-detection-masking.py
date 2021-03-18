@@ -112,8 +112,21 @@ class TestFaceDetection(unittest.TestCase):
         assert (expected_matrix == test_matrix).all()  # compare both arrays
 
     def test_create_mask(self):
+        """
+        Test masking when coordinates valid
+        """
         masked_matrix = main.create_mask(
             360, 512, (228, 133), (230, 168), (169, 163), (300, 147), (237, 235)
         )
         expected_matrix = np.load("test_assets/masked_array.npy")
         assert (expected_matrix == masked_matrix).all()
+
+    def test_create_mask_invalid(self):
+        """
+        Test masking when coordinates invalid
+        """
+        masked_matrix = main.create_mask(
+            360, 512, (200, 133), (230, 168), (169, 163), (250, 147), (237, 235)
+        )
+        expected_matrix = np.load("test_assets/masked_array.npy")
+        assert not (expected_matrix == masked_matrix).all()
