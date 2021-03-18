@@ -9,6 +9,9 @@ import exceptions
 
 class TestFaceDetection(unittest.TestCase):
     def test_smiling_face(self):
+        """
+        Test face for smile
+        """
         uri = (
             "https://image.freepik.com/free-photo/"
             "smiling-man-face-white-background_33839-3342.jpg"
@@ -23,7 +26,9 @@ class TestFaceDetection(unittest.TestCase):
             self.fail("ExpectedException not raised")
 
     def test_facing_not_camera(self):
-
+        """
+        Test when face is not facing camera
+        """
         uri = (
             "https://media.istockphoto.com/photos/man-with-a-"
             "view-of-the-future-picture-id531734671?k=6&m=531734671&s="
@@ -39,6 +44,9 @@ class TestFaceDetection(unittest.TestCase):
             self.fail("ExpectedException not raised")
 
     def test_tilted_face(self):
+        """
+        Test for straight face
+        """
         uri = (
             "https://westsidetoastmasters.com/resources/book_of_"
             "body_language/images/233-head_tilt.jpg"
@@ -53,7 +61,9 @@ class TestFaceDetection(unittest.TestCase):
             self.fail("ExpectedException not raised")
 
     def test_low_light_photo(self):
-
+        """
+        Test for proper lighting in the image
+        """
         uri = (
             "https://64.media.tumblr.com/0a2c59e9b675e8d11a2fca8398150"
             "d7f/tumblr_oaevfwGlQL1up31rro1_1280.jpg"
@@ -68,7 +78,9 @@ class TestFaceDetection(unittest.TestCase):
             self.fail("ExpectedException not raised")
 
     def test_multiple_face_in_photo(self):
-
+        """
+        Test when multiple faces in the image
+        """
         uri = "https://i1.sndcdn.com/avatars-atGTli7E1tTMoT74-wKcmmQ-t500x500.jpg"
         try:
             main.face_detection(uri)
@@ -80,6 +92,9 @@ class TestFaceDetection(unittest.TestCase):
             self.fail("ExpectedException not raised")
 
     def test_no_face_in_photo(self):
+        """
+        Test for image without human face
+        """
         uri = (
             "https://cdn.insidesport.co/wp-content/uploads/" "2020/10/07193932/fifa.jpg"
         )
@@ -93,6 +108,9 @@ class TestFaceDetection(unittest.TestCase):
             self.fail("ExpectedException not raised")
 
     def test_neutral_face(self):
+        """
+        Test for neutral face expression
+        """
         uri = (
             "https://t4.ftcdn.net/jpg/02/46/14/93/360_F_246149382_"
             "KHkt8Mw8pptlmVuiqmhavvHBC4SEqBu1.jpg"
@@ -121,6 +139,10 @@ class TestFaceDetection(unittest.TestCase):
         assert chin == result[8]
 
     def test_process_image(self):
+        """
+        Test if the final processed image is properly detected, cropped
+        and masked.
+        """
         full_image_path = "test_assets/ori.jpg"
         expected_image_path = "test_assets/final_expected.jpg"
         test_image_path = main.process_img(
