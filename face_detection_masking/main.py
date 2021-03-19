@@ -63,8 +63,9 @@ def face_detection(uri):
     Args:
         uri: the file located in Google Cloud Storage or the web
     returns:
-        None: Prints the likelihood of the face expressions
-        or returns an errors resonse in string format
+        list: face annotations (top_left_x, top_left_y, bottom_right_x,
+        bottom_right_y, mid_eyes, nose, left_ear, right_ear, chin)
+        Or returns an errors response in string format
     """
     vision_client = vision.ImageAnnotatorClient()
     image = vision.Image()
@@ -169,7 +170,6 @@ def process_img(
     mask = create_mask(
         img.shape[0], img.shape[1], mid_eyes, nose, left_ear, right_ear, chin
     )
-
     # apply mask
     masked_img = cv2.bitwise_and(img, mask)
 
@@ -197,8 +197,14 @@ def process_img(
     # resize
     final_img = resize(gray_img)
 
+    # temp directory to store images
+    if not os.path.exists(constants.TEMP_DIR[1:]):
+        os.makedirs(constants.TEMP_DIR[1:])
+
     # Save processed image to local dir
-    processed_file_path = f"{constants.TEMP_DIR}/{constants.PROCESSED_IMAGE}"
+    processed_file_path = (
+        os.getcwd() + f"{constants.TEMP_DIR}/{constants.PROCESSED_IMAGE}"
+    )
     cv2.imwrite(processed_file_path, final_img)
     return processed_file_path
 
@@ -335,7 +341,7 @@ def upload_processed_images(bucket_name, source_file_folder):
 
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
-    print(bucket_name + ' :bucket name')
+    print(bucket_name + " :bucket name")
     for file_name in os.listdir(source_file_folder):
         blob = bucket.blob(file_name)
         blob.upload_from_filename(os.path.join(source_file_folder, file_name))
