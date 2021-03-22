@@ -2,7 +2,6 @@ import datetime
 import os
 import requests
 import subprocess
-import uuid
 
 from google.cloud import storage
 from urllib3.util import Retry
@@ -12,18 +11,13 @@ import constants
 
 def test_trigger_detect_and_mask():
     # Bootstrap
-    storage_client = storage.Client()
-    bucket_name_suffix = str(uuid.uuid4())
-    input_bucket_name = "test_sie-raw-images_" + bucket_name_suffix
-    # output_bucket_name = "test_sie-masked-images_" + bucket_name_suffix
-    output_bucket_name = "sie-masked-images"
+    input_bucket_name = "integ_test_sie-raw-images"
+    output_bucket_name = "integ_test_sie-masked-images"
+    image_name = "human.jpeg"
 
     # Create buckets
-    set_up_bucket(input_bucket_name)
-    set_up_bucket(output_bucket_name)
-
-    # TODO - image name
-    image_name = str(uuid.uuid4())
+    # set_up_bucket(input_bucket_name)
+    # set_up_bucket(output_bucket_name)
 
     # Each running framework instance needs a unique port
     port = 8089
@@ -70,17 +64,16 @@ def test_trigger_detect_and_mask():
     out, err = process.communicate()
 
     print(out, err, response.content)
-
     assert 'Face detected and masked successfully!' in str(out)
 
-    # TODO - validate images in the output bucket
+    # Validate images in the output bucket
     participant_id = os.path.splitext(image_name)[0]
     output_file_name = f"{participant_id}/{constants.PROCESSED_IMAGE}"
-    assert validate_file_in_bucket(output_bucket_name, )
+    assert validate_file_in_bucket(output_bucket_name, output_file_name)
 
     # Clean up buckets
-    clean_up_bucket(input_bucket_name)
-    clean_up_bucket(output_bucket_name)
+    # clean_up_bucket(input_bucket_name)
+    clean_up_bucket(output_bucket_name, participant_id)
 
 
 def set_up_bucket(bucket_name):
@@ -107,7 +100,7 @@ def set_up_bucket(bucket_name):
     return new_bucket
 
 
-def clean_up_bucket(bucket_name):
+def clean_up_bucket(bucket_name, folder_name):
     """
     The function delete both objects in the specified bucket and the bucket itself.
     Args:
@@ -120,9 +113,13 @@ def clean_up_bucket(bucket_name):
         bucket = storage_client.get_bucket(bucket_name)
         bucket.delete(force=True)
 
+        blobs = bucket.list_blobs(prefix=folder_name)
+        for blob in blobs:
+            blob.delete()
+
         print(
-            "Deleted bucket {} successfully".format(
-                bucket_name
+            "Deleted objects in folder {} under bucket {} successfully".format(
+                folder_name, bucket_name
             )
         )
     except ValueError as error:
