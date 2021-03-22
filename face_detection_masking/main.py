@@ -6,7 +6,6 @@
 
 import os
 import cv2
-import requests
 import numpy as np
 import traceback
 import sys
@@ -35,7 +34,6 @@ def face_check(face):
         raise exceptions.InvalidFaceImage(
             "Please make sure your image has neutral facial expression."
         )
-
     if face.under_exposed_likelihood > constants.LIGHTING_THRESHOLD:
         raise exceptions.InvalidFaceImage("Please make sure your image is well-lit.")
 
@@ -64,17 +62,22 @@ def face_detection(uri):
     Args:
         uri: the file located in Google Cloud Storage or the web
     returns:
-        None: Prints the likelihood of the face expressions
-        or returns an errors resonse in string format
+        list: face annotations (top_left_x, top_left_y, bottom_right_x,
+        bottom_right_y, mid_eyes, nose, left_ear, right_ear, chin)
+        Or returns an errors response in string format
     """
     vision_client = vision.ImageAnnotatorClient()
-
     image = vision.Image()
     image.source.image_uri = uri
 
     response = vision_client.face_detection(image=image)
-
     faceAnnotations = response.face_annotations
+
+    # Ensuring an empty or non-human image is not passed in
+    if len(faceAnnotations) == 0:
+        raise exceptions.InvalidFaceImage(
+            "Please ensure the image has your face in it."
+        )
 
     # Making sure that there's only one person in the frame
     if len(faceAnnotations) != 1:
@@ -83,7 +86,6 @@ def face_detection(uri):
         )
 
     face = faceAnnotations[0]
-
     face_check(face)
 
     vertices_list = []
@@ -108,7 +110,6 @@ def face_detection(uri):
             right_ear = (int(landmark.position.x), int(landmark.position.y))
         elif landmark.type_ == constants.CHIN_BOTTOM:
             chin = (int(landmark.position.x), int(landmark.position.y))
-
     if (
         mid_eyes == (0, 0)
         or nose == (0, 0)
@@ -162,14 +163,12 @@ def process_img(
     returns:
         str: file path of the processed image
     """
-
     img = cv2.imread(path)
 
     # create mask
     mask = create_mask(
         img.shape[0], img.shape[1], mid_eyes, nose, left_ear, right_ear, chin
     )
-
     # apply mask
     masked_img = cv2.bitwise_and(img, mask)
 
@@ -186,19 +185,25 @@ def process_img(
         bottom_right_y = int(bottom_right_y) + int(make_square)
 
     # Make the background color grey
-
     # naive fix for linting error: line getting to long ->
     crop_img = masked_img[top_left_y:bottom_right_y, top_left_x:bottom_right_x].copy()
     crop_img[np.where((crop_img == [0, 0, 0]).all(axis=2))] = [140, 141, 137]
 
     # Convert to Grayscale
+
     gray_img = cv2.cvtColor(crop_img, cv2.COLOR_BGR2GRAY)
 
     # resize
     final_img = resize(gray_img)
 
+    # temp directory to store images
+    if not os.path.exists(constants.TEMP_DIR[1:]):
+        os.makedirs(constants.TEMP_DIR[1:])
+
     # Save processed image to local dir
-    processed_file_path = f"{constants.TEMP_DIR}/{constants.PROCESSED_IMAGE}"
+    processed_file_path = (
+        os.getcwd() + f"{constants.TEMP_DIR}/{constants.PROCESSED_IMAGE}"
+    )
     cv2.imwrite(processed_file_path, final_img)
     return processed_file_path
 
@@ -261,75 +266,6 @@ def resize(image):
         return cv2.resize(image, (128, 128))
     else:
         return None
-
-
-def detect_and_process(uri):
-    """
-    This is a mock function to test the functionality of our image
-    processing pipeline without using Google Storage Bucket. In other
-    words, we want the below functionality implemented in trigger_event()
-    function later on.
-
-    Currently the images are stored in /temp directory as ori.jpg (raw) and
-    neutral.jpg (processed) instead of GStorageBuckets.
-    Args:
-        uri: URI of the source image
-    returns:
-        str: Error or Success message
-    """
-
-    try:
-        # parse the image url from the uri
-        # Example URI when testing locally:
-        # http://localhost:${FUNCTION_PORT_HTTP}/?subject=https://images.pexels.com/
-        # photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940
-        url = uri.args.get("subject")
-
-        results = face_detection(url)
-        # temp directory to store images
-        if not os.path.exists(constants.TEMP_DIR):
-            os.makedirs(constants.TEMP_DIR)
-        download_to = os.getcwd() + f"/{constants.TEMP_DIR}/{constants.SOURCE_IMAGE}"
-
-        # valid face
-        topLeft_x, topLeft_y, bottomRight_x, bottomRight_y = (
-            results[0],
-            results[1],
-            results[2],
-            results[3],
-        )
-        mid_eyes, nose, left_ear, right_ear, chin = (
-            results[4],
-            results[5],
-            results[6],
-            results[7],
-            results[8],
-        )
-
-        # download the image into the temp directory
-        data_downloaded = requests.get(url)
-        with open(download_to, "wb") as outfile:
-            outfile.write(data_downloaded.content)
-
-        process_img(
-            download_to,
-            topLeft_x,
-            topLeft_y,
-            bottomRight_x,
-            bottomRight_y,
-            mid_eyes,
-            nose,
-            left_ear,
-            right_ear,
-            chin,
-        )
-
-    except exceptions.InvalidFaceImage as err:
-        return str(err), 400
-    except Exception as err:
-        return str(err), 500
-
-    return "Processed Sucessfully!", 200
 
 
 def trigger_event(event, context):
@@ -404,7 +340,7 @@ def upload_processed_images(bucket_name, source_file_folder):
 
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
-
+    print(bucket_name + " :bucket name")
     for file_name in os.listdir(source_file_folder):
         blob = bucket.blob(file_name)
         blob.upload_from_filename(os.path.join(source_file_folder, file_name))
