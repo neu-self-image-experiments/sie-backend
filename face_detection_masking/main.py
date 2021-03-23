@@ -6,7 +6,6 @@
 
 import os
 import cv2
-import requests
 import numpy as np
 import traceback
 import sys
@@ -72,8 +71,13 @@ def face_detection(uri):
     image.source.image_uri = uri
 
     response = vision_client.face_detection(image=image)
-
     faceAnnotations = response.face_annotations
+
+    # Ensuring an empty or non-human image is not passed in
+    if len(faceAnnotations) == 0:
+        raise exceptions.InvalidFaceImage(
+            "Please ensure the image has your face in it."
+        )
 
     # Making sure that there's only one person in the frame
     if len(faceAnnotations) != 1:
@@ -82,7 +86,6 @@ def face_detection(uri):
         )
 
     face = faceAnnotations[0]
-
     face_check(face)
 
     vertices_list = []
@@ -107,7 +110,6 @@ def face_detection(uri):
             right_ear = (int(landmark.position.x), int(landmark.position.y))
         elif landmark.type_ == constants.CHIN_BOTTOM:
             chin = (int(landmark.position.x), int(landmark.position.y))
-
     if (
         mid_eyes == (0, 0)
         or nose == (0, 0)
@@ -263,77 +265,6 @@ def resize(image):
         return cv2.resize(image, (128, 128))
     else:
         return None
-
-
-def detect_and_process(uri):
-    """
-    This is a mock function to test the functionality of our image
-    processing pipeline without using Google Storage Bucket. In other
-    words, we want the below functionality implemented in trigger_event()
-    function later on.
-
-    Currently the images are stored in /temp directory as ori.jpg (raw) and
-    neutral.jpg (processed) instead of GStorageBuckets.
-    Args:
-        uri: URI of the source image
-    returns:
-        str: Error or Success message
-    """
-
-    try:
-        # parse the image url from the uri
-        # Example URI when testing locally:
-        # http://localhost:${FUNCTION_PORT_HTTP}/?subject=https://images.pexels.com/
-        # photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940
-        # url = uri.args.get("subject")
-        url = uri
-
-        results = face_detection(url)
-        # temp directory to store images
-        if not os.path.exists(constants.TEMP_DIR[1:]):
-            os.makedirs(constants.TEMP_DIR[1:])
-        download_to = os.getcwd() + f"{constants.TEMP_DIR}/{constants.SOURCE_IMAGE}"
-
-        # valid face
-        topLeft_x, topLeft_y, bottomRight_x, bottomRight_y = (
-            results[0],
-            results[1],
-            results[2],
-            results[3],
-        )
-        mid_eyes, nose, left_ear, right_ear, chin = (
-            results[4],
-            results[5],
-            results[6],
-            results[7],
-            results[8],
-        )
-
-        # download the image into the temp directory
-        data_downloaded = requests.get(url)
-        with open(download_to, "wb") as outfile:
-            outfile.write(data_downloaded.content)
-
-        process_img(
-            download_to,
-            topLeft_x,
-            topLeft_y,
-            bottomRight_x,
-            bottomRight_y,
-            mid_eyes,
-            nose,
-            left_ear,
-            right_ear,
-            chin,
-        )
-
-    except exceptions.InvalidFaceImage as err:
-        return str(err), 400
-    except Exception as err:
-        traceback.print_exception(*sys.exc_info())
-        return str(err), 500
-
-    return "Processed Sucessfully!", 200
 
 
 def trigger_event(event, context):
