@@ -408,7 +408,7 @@ def upload_processed_images(bucket_name, source_file_folder):
 
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
-    print(bucket_name + " :bucket name")
+   
     for file_name in os.listdir(source_file_folder):
         blob = bucket.blob(file_name)
         blob.upload_from_filename(os.path.join(source_file_folder, file_name))
