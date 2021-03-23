@@ -111,11 +111,11 @@ def face_detection(uri):
         elif landmark.type_ == constants.CHIN_BOTTOM:
             chin = (int(landmark.position.x), int(landmark.position.y))
     if (
-        mid_eyes == (0, 0)
-        or nose == (0, 0)
-        or left_ear == (0, 0)
-        or right_ear == (0, 0)
-        or chin == (0, 0)
+        mid_eyes == constants.ORIGIN_COORD
+        or nose == constants.ORIGIN_COORD
+        or left_ear == constants.ORIGIN_COORD
+        or right_ear == constants.ORIGIN_COORD
+        or chin == constants.ORIGIN_COORD
     ):
         raise exceptions.InvalidFaceImage(
             "Please ensure your full face is visible in the image, \
