@@ -183,7 +183,6 @@ def process_img(
         bottom_right_y = int(bottom_right_y) + int(make_square)
 
     # Make the background color grey
-    # naive fix for linting error: line getting to long ->
     crop_img = masked_img[top_left_y:bottom_right_y, top_left_x:bottom_right_x].copy()
     crop_img[np.where((crop_img == [0, 0, 0]).all(axis=2))] = [140, 141, 137]
 
@@ -195,12 +194,12 @@ def process_img(
     final_img = resize(gray_img)
 
     # temp directory to store images
-    if not os.path.exists(constants.TEMP_DIR[1:]):
-        os.makedirs(constants.TEMP_DIR[1:])
+    if not os.path.exists(constants.TEMP_NAME):
+        os.makedirs(constants.TEMP_NAME)
 
     # Save processed image to local dir
     processed_file_path = (
-        os.getcwd() + f"{constants.TEMP_DIR}/{constants.PROCESSED_IMAGE}"
+        f"{os.getcwd()}/{constants.TEMP_DIR}/{constants.PROCESSED_IMAGE}"
     )
     cv2.imwrite(processed_file_path, final_img)
     return processed_file_path
