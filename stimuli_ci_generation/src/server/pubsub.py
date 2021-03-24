@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from google.cloud import pubsub_v1
 from google import api_core
 

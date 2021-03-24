@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python
 
 from flask import Flask
 from flask import request
@@ -7,10 +7,8 @@ import os
 import base64
 import json
 
-from server.pubsub import pub_msg
+from server.datastore import update_user_doc
 from server.stimuli_ci import generate_stimuli, generate_ci
-
-from gcp_config import SIE_IMG_PROCESSING_RESULT
 
 app = Flask(__name__)
 
@@ -74,12 +72,8 @@ def index():
             # and the images pass facial detection
             try:
                 generate_stimuli(participant_id, file_name)
-                pub_msg(
-                    "Completed",
-                    SIE_IMG_PROCESSING_RESULT,
-                    participant_id,
-                    experiment_id,
-                )
+                update_user_doc(participant_id, experiment_id, "completed")
+
                 return ("Stimuli generated", 202)
             except Exception as e:
                 print(e)

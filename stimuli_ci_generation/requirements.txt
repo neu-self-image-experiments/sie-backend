@@ -18,3 +18,4 @@ Werkzeug==1.0.1
 google-cloud-storage
 google-cloud-logging
 google-cloud-pubsub==2.4.0
+google-cloud-datastore
