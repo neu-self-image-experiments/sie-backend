@@ -4,9 +4,9 @@
 This module contains helper methods to modify firestore documents
 """
 
-from google.cloud import datastore
+from google.cloud import firestore
 
-db = datastore.Client()
+db = firestore.Client()
 
 
 def update_user_doc(participant_id, experiment_id, stimuli_status=None):
@@ -20,4 +20,4 @@ def update_user_doc(participant_id, experiment_id, stimuli_status=None):
         None
     """
     user_doc_ref = db.collection("Users").document(participant_id)
-    user_doc_ref.set({"sie-stimuli-generation-status": stimuli_status or ""})
+    user_doc_ref.update({"sie_stimuli_generation_status": stimuli_status or ""})
