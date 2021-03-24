@@ -5,6 +5,7 @@ This module contains helper methods to modify firestore documents
 """
 
 from google.cloud import firestore
+from gcp_config import FIRESTORE_USER_COLLECTION
 
 db = firestore.Client()
 
@@ -19,5 +20,5 @@ def update_user_doc(participant_id, experiment_id, stimuli_status=None):
     Returns:
         None
     """
-    user_doc_ref = db.collection("Users").document(participant_id)
+    user_doc_ref = db.collection(FIRESTORE_USER_COLLECTION).document(participant_id)
     user_doc_ref.update({"sie_stimuli_generation_status": stimuli_status or ""})
