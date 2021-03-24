@@ -15,7 +15,6 @@ def update_user_doc(participant_id, experiment_id, stimuli_status=None):
     Args:
         participant_id: user's uid
         experiment_id: experiment's id
-        qualtrics_consent: 'yes' or 'no'
         stimuli_status: 'completed' or None
     Returns:
         None
