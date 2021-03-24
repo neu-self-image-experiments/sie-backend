@@ -195,15 +195,10 @@ def process_img(
     # resize
     final_img = resize(gray_img)
 
-    # temp directory to store images
-    if not os.path.exists(constants.TEMP_NAME):
-        os.makedirs(constants.TEMP_NAME)
-
     # Save processed image to local dir
-    processed_file_path = (
-        f"{os.getcwd()}/{constants.TEMP_DIR}/{constants.PROCESSED_IMAGE}"
-    )
+    processed_file_path = f"{constants.TEMP_DIR}/{constants.PROCESSED_IMAGE}"
     cv2.imwrite(processed_file_path, final_img)
+
     return processed_file_path
 
 

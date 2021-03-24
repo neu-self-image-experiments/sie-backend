@@ -25,6 +25,5 @@ ORIGIN_COORD = (0, 0)  # origin coordinates
     PROJECT SPECIFIC
 """
 TEMP_DIR = "/tmp"
-TEMP_NAME = "tmp"
 SOURCE_IMAGE = "ori.jpg"
 PROCESSED_IMAGE = "neutral.jpg"
