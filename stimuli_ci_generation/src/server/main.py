@@ -60,7 +60,7 @@ def index():
         if len(file_identifier_parts) > 2:
             print(f"invalid file identifier {file_identifier}")
             return f"Bnvalid file identifier {file_identifier}", 204
-        identifier, file_name = file_identifier_parts[0], file_identifier_parts[-1]
+        identifier, file_name = file_identifier_parts
         file_type = file_name.split(".")[-1]
         # returning 2xx here to ack pub/sub msg
         # or else storage trigger will keep retrying
