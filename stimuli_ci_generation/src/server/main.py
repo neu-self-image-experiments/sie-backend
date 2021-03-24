@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python
 
 from flask import Flask
 from flask import request
@@ -7,10 +7,8 @@ import os
 import base64
 import json
 
-from server.pubsub import pub_msg
+from server.firestore import update_user_doc
 from server.stimuli_ci import generate_stimuli, generate_ci
-
-from gcp_config import SIE_IMG_PROCESSING_RESULT
 
 app = Flask(__name__)
 
@@ -62,6 +60,7 @@ def index():
             return f"Invalid file identifier {file_identifier}", 204
         identifier, file_name = file_identifier_parts
         file_type = file_name.split(".")[-1]
+        participant_id, experiment_id = identifier.split("-")
         # returning 2xx here to ack pub/sub msg
         # or else storage trigger will keep retrying
         if file_type.lower() == "csv":
@@ -76,7 +75,8 @@ def index():
             # and the images pass facial detection
             try:
                 generate_stimuli(identifier, file_name)
-                pub_msg("Completed", SIE_IMG_PROCESSING_RESULT, identifier)
+                update_user_doc(participant_id, experiment_id, "completed")
+
                 return ("Stimuli generated", 202)
             except Exception as e:
                 print(e)
