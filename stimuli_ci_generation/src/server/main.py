@@ -60,7 +60,7 @@ def index():
             return f"Invalid file identifier {file_identifier}", 204
         identifier, file_name = file_identifier_parts
         file_type = file_name.split(".")[-1]
-        participant_id, experiment_id = identifier.split('-')
+        participant_id, experiment_id = identifier.split("-")
         # returning 2xx here to ack pub/sub msg
         # or else storage trigger will keep retrying
         if file_type.lower() == "csv":
@@ -76,7 +76,7 @@ def index():
             try:
                 generate_stimuli(identifier, file_name)
                 update_user_doc(participant_id, experiment_id, "completed")
-                
+
                 return ("Stimuli generated", 202)
             except Exception as e:
                 print(e)
