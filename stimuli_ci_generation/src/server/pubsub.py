@@ -44,14 +44,13 @@ def get_callback(future, data):
     return callback
 
 
-def pub_msg(msg: str, topic_id: str, participant_id: str, experiment_id: str):
+def pub_msg(msg: str, topic_id: str, identifier: str):
     """
     Publish a message to a pubsub topic
     Args:
         msg: message to be published
         topic_id: pubsub topic id
-        participant_id: participant id
-        experiment_id: experiment_id
+        identifier: survey identifier
     """
 
     data = msg.encode("utf-8")
@@ -59,8 +58,7 @@ def pub_msg(msg: str, topic_id: str, participant_id: str, experiment_id: str):
     future = publisher.publish(
         topic_path,
         data,
-        participant_id=participant_id,
-        experiment_id=experiment_id,
+        identifier=identifier,
         retry=custom_retry,
     )
     future.add_done_callback(get_callback(future, data))
