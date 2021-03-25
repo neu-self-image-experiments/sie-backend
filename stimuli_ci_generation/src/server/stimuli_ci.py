@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python
 
 import subprocess
 import os
@@ -56,13 +56,13 @@ def generate_ci(identifier, file_name):
     r_script_path = f"{os.getcwd()}/rscript/generate_ci.R"
 
     if not os.path.exists(f"{ws_dir}/stimuli"):
-        mkdir(identifier, "stimuli")
-        download_dir(gcp_config.STIMULI_IMG_BUCKET, identifier, f"{ws_dir}/stimuli")
+        stimuli_dir = mkdir(identifier, "stimuli")
+        download_dir(gcp_config.STIMULI_IMG_BUCKET, identifier, f"{stimuli_dir}")
         print(f"downloaded stimuli images to {ws_dir}/stimuli")
 
     download_file(
         gcp_config.USER_SELECTION_BUCKET,
-        f"{id}/{USER_SELECTION}",
+        f"{identifier}/{USER_SELECTION}",
         f"{ws_dir}/{USER_SELECTION}",
     )
     print(f"user_selection.csv has been downloaded to {ws_dir}/{USER_SELECTION}")

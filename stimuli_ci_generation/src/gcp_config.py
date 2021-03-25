@@ -20,3 +20,9 @@ CI_IMG_BUCKET = "sie-ci-images"
 """
 
 SIE_IMG_PROCESSING_RESULT = "sie-image-processing-result-test"
+
+
+"""
+    Firestore collections
+"""
+FIRESTORE_USER_COLLECTION = "Users"

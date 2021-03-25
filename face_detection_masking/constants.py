@@ -1,5 +1,6 @@
 """
-    Google Vision
+    Google Vision - These constants are used to detect and
+    validate the face in the image
 """
 EMOTION_THRESHOLD = 3
 LIGHTING_THRESHOLD = 2
@@ -18,6 +19,7 @@ END_ANGLE = 360
 WHT_COLOR = (255, 255, 255)  # White color in BGR
 THICKNESS = -1  # Line thickness
 
+ORIGIN_COORD = (0, 0)  # origin coordinates
 
 """
     PROJECT SPECIFIC
