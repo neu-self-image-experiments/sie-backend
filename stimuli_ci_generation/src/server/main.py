@@ -60,7 +60,12 @@ def index():
             return f"Invalid file identifier {file_identifier}", 204
         identifier, file_name = file_identifier_parts
         file_type = file_name.split(".")[-1]
-        participant_id, experiment_id = identifier.split("-")
+
+        try:
+            participant_id, experiment_id = identifier.split("-")
+        except ValueError:
+            return f"Failed to parse identifer {identifier}", 204
+
         # returning 2xx here to ack pub/sub msg
         # or else storage trigger will keep retrying
         if file_type.lower() == "csv":
