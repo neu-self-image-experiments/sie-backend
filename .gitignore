@@ -116,7 +116,12 @@ venv.bak/
 .DS_Store/
 scripts/
 temp/
+tmp/
+face_detection_masking/tmp/
 .vscode/
+.idea/
+google-cloud-sdk/
+
 
 # Spyder project settings
 .spyderproject
