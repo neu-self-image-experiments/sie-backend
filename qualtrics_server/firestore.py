@@ -23,10 +23,9 @@ def update_user_doc(participant_id: str, experiment_id: str, attributes: dict):
     """
 
     user_doc_ref = db.collection(
-        f"""
-        {FIRESTORE_USER_COLLECTION}/
-        {participant_id}/
-        {FIRESTORE_USER_EXPERIMENT_COLLECTION}"""
+        f"{FIRESTORE_USER_COLLECTION}/"
+        f"{participant_id}/"
+        f"{FIRESTORE_USER_EXPERIMENT_COLLECTION}"
     ).document(experiment_id)
 
     if attributes:
