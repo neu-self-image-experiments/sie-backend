@@ -6,6 +6,8 @@
 PROJECT_ID = "cs6510-spr2021"
 
 """
-    Pubsub topic ids
+    Firestore collections
 """
-SIE_QUALTRICS_CONSENT = "qualtrics-consent"
+FIRESTORE_USER_COLLECTION = "Users"
+# a sub-collection in a user document
+FIRESTORE_USER_EXPERIMENT_COLLECTION = "Experiments"
