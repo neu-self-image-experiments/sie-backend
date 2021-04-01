@@ -7,10 +7,12 @@ EXPERIMENT_ID_FIELD = "experiment_id"
 
 
 def catch_qualtrics_requests(request):
-    request_args = request.args
+    """
+    Listens for POST requests from qualtrics survey and updates the
+    corresponding firestore documents
+    """
 
-    participant_id = ""
-    experiment_id = ""
+    request_args = request.args
 
     if request_args:
         if PARTICIPANT_ID_FIELD in request_args:
@@ -21,7 +23,7 @@ def catch_qualtrics_requests(request):
     qualtrics_responses = {
         key: value
         for key, value in request_args.items()
-        if key not in ["participant_id", "experiment_id"]
+        if key not in [PARTICIPANT_ID_FIELD, EXPERIMENT_ID_FIELD]
     }
     try:
         update_user_doc(participant_id, experiment_id, qualtrics_responses)
