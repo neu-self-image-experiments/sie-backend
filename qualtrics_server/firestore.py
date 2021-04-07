@@ -6,7 +6,10 @@ This module contains helper methods to modify firestore documents
 
 
 from google.cloud import firestore
-from gcp_config import FIRESTORE_USER_COLLECTION, FIRESTORE_USER_EXPERIMENT_COLLECTION
+from gcp_config import (
+    FIRESTORE_USER_COLLECTION,
+    FIRESTORE_USER_EXPERIMENT_SUBCOLLECTION,
+)
 
 db = firestore.Client()
 
@@ -25,7 +28,7 @@ def update_user_doc(participant_id: str, experiment_id: str, attributes: dict):
     user_doc_ref = db.collection(
         f"{FIRESTORE_USER_COLLECTION}/"
         f"{participant_id}/"
-        f"{FIRESTORE_USER_EXPERIMENT_COLLECTION}"
+        f"{FIRESTORE_USER_EXPERIMENT_SUBCOLLECTION}"
     ).document(experiment_id)
 
     if attributes:
