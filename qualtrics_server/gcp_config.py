@@ -10,4 +10,4 @@ PROJECT_ID = "cs6510-spr2021"
 """
 FIRESTORE_USER_COLLECTION = "Users"
 # a sub-collection in a user document
-FIRESTORE_USER_EXPERIMENT_COLLECTION = "Experiments"
+FIRESTORE_USER_EXPERIMENT_SUBCOLLECTION = "Experiments"

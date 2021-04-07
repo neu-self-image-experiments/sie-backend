@@ -26,3 +26,4 @@ SIE_IMG_PROCESSING_RESULT = "sie-image-processing-result-test"
     Firestore collections
 """
 FIRESTORE_USER_COLLECTION = "Users"
+FIRESTORE_USER_EXPERIMENT_SUBCOLLECTION = "Experiments"
