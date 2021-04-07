@@ -122,7 +122,6 @@ face_detection_masking/tmp/
 .idea/
 google-cloud-sdk/
 
-
 # Spyder project settings
 .spyderproject
 .spyproject
