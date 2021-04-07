@@ -19,7 +19,7 @@ def update_user_doc(participant_id: str, experiment_id: str, attributes: dict):
     Args:
         participant_id: user's uid
         experiment_id: experiment's id
-        attributes: dict of qualtrics responses
+        attributes: dict of doc attributes to update
     Returns:
         None
     """
