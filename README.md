@@ -162,13 +162,13 @@ Reviewers are expected to actually take time to inspect the reviewee's work and 
 
 Please write unit tests into the target function's folder and name it test.py. If test.py already exist, just add your unit tests into the file.
 
-In order to do the unit test, functions-framework should be installed initally. You can run the following command to install functions-framework
+In order to do the unit test, we recommend you install pytest
 
 ```
-pip install functions-framework
+pip install -U pytest
 ```
 
-For more information regarding functions-framework please refer to: https://github.com/GoogleCloudPlatform/functions-framework-python
+For more information regarding pytest please refer to: https://docs.pytest.org/en/stable/
 
 Also, please make sure you already have a credential file inside env/ folder. For setting environment variable please refer to: https://cloud.google.com/docs/authentication/getting-started#setting_the_environment_variable
 
@@ -179,14 +179,22 @@ For more information regarding writing a unit test, please follow the guidlines 
 You can run your test with following commmand (Please make sure you are in the right directory)
 
 ```
-functions-framework --source=test.py --target=THE_NAME_FOR_UNIT_TEST_FUNCTION
+pytest YOUR_TEST_FILE
 ```
 
-### Sending a HTTP request
+### Compute coverage
 
-Finally, make a HTTP request to default address http://0.0.0.0:8080 via Postman. You can also send parameter with a HTTP request.
+Please install pytest-cov if you try to find your test coverage. You can run the following command to install pytest-cov
 
-For more information about how to use Postman or how to pass paramter with a HTTP request via Postman, please refer to: https://learning.postman.com/docs/sending-requests/requests/
+```
+pip install pytest-cov
+```
+
+Run pytest command with -cov option and your test file to find out your test coverage
+
+```
+pytest -cov=[SOURCE_FILE_TO_BE_TESTED] YOUR_TEST_FILES
+```
 
 <hr>
 
