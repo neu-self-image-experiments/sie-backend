@@ -3,7 +3,7 @@
 ### Description
 This is the first part of the image processing pipeline. When a user uploads a photo it will stored in `sie-raw-images` bucket. The image filename should be of the form `user_id-experiment_id.jpg` (seperated by '-'). Once uploaded, the event will trigger the `trigger_detect_and_mask()` function (check `main.py`) which will validate and process the image. 
 
-The cloud function will validate the image (see Exceptions below) and resize, crop, grayscale, and mask the image for generating stimuli. Once the processing is completed it will be stored in `sie-masked-image` bucket at `user_id-experiment_id/neutral.jpg` location. 
+The cloud function will validate the image (see Exceptions below) and resize, crop, grayscale, and mask the image for generating stimuli. Once the processing is completed it will be stored in `sie-masked-images` bucket at `user_id-experiment_id/neutral.jpg` location. 
 
 ### Local Development
 
@@ -18,7 +18,7 @@ For developing locally, you will need an IAM token for the service account: `clo
 
 ### Run Unit Tests
 
-Make sure to cd into `/face_dectection_masking` folder. Then run the following command:
+Make sure to cd into `/face_detection_masking` folder. Then run the following command:
 
 ```
 pytest test_face_detection_masking.py
@@ -26,7 +26,7 @@ pytest test_face_detection_masking.py
 
 ### Upload Cloud Function
 
-Push your local cloud functions to google cloud. First make sure to cd into `/face_dectection_masking` folder. Then run the following command:
+Push your local cloud function to google cloud. First make sure to cd into `/face_detection_masking` folder. Then run the following command:
 
 ```
 gcloud functions deploy trigger_detect_and_mask --runtime python38 --trigger-bucket sie-raw-images
