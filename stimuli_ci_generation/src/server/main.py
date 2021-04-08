@@ -81,11 +81,20 @@ def index():
             # and the images pass facial detection
             try:
                 generate_stimuli(identifier, file_name)
-                update_user_doc(participant_id, experiment_id, "completed")
+                update_user_doc(
+                    participant_id,
+                    experiment_id,
+                    {"sie_stimuli_generation_status": "completed"},
+                )
 
                 return ("Stimuli generated", 202)
             except Exception as e:
                 print(e)
+                update_user_doc(
+                    participant_id,
+                    experiment_id,
+                    {"sie_stimuli_generation_status": "incomplete"},
+                )
                 return ("Failed to generate stimuli", 204)
 
     print("data missing in pub/sub message")

@@ -3,18 +3,14 @@ import main
 from google.cloud import storage
 
 
-def test_upload_processed_images(request):
+def test_upload_processed_images():
     """Unit test for the function upload_processed_images.
-    Args:
-        request = "HTTP request"
 
     Returns:
         String if all assertion passed;
     """
-
-    request_args = request.args
-    bucket_name = request_args["bucket_name"]
-    source_file_folder = request_args["source_file_folder"]
+    bucket_name = "sie-raw-images"
+    source_file_folder = "test_data"
 
     # Create connection to the storage
     storage_client = storage.Client()
