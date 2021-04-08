@@ -3,7 +3,6 @@
 import os
 import shutil
 
-
 def mkdir(participant_id, *args):
     """
     Create directories in tmp dir
