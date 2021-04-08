@@ -8,7 +8,8 @@ from server.util import mkdir
 
 import gcp_config
 
-USER_SELECTION = 'user_selection.csv'
+USER_SELECTION = "user_selection.csv"
+
 
 def generate_stimuli(identifier, file_name):
     """
@@ -63,7 +64,7 @@ def generate_ci(identifier, file_name):
     if len(os.listdir(f"{ws_dir}/stimuli")) == 0:
         raise Exception("CI could not be generated due to empty stimuli directory.")
 
-    if (file_name != USER_SELECTION):
+    if file_name != USER_SELECTION:
         raise Exception(f"name of user selections file does not match {USER_SELECTION}")
     download_file(
         gcp_config.USER_SELECTION_BUCKET,

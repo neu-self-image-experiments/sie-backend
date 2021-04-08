@@ -49,7 +49,7 @@ def download_dir(bucket_name, source_dir, destination_dir):
     print(f"Downloading folder {bucket_name}/{source_dir} to {destination_dir}")
     print("len of blob list", len(blobs))
     for blob in blobs:
-        filename = blob.name.split('/')[-1]
+        filename = blob.name.split("/")[-1]
         # print(f"downloading {blob.name} to {destination_dir}/{filename} ")
         blob.download_to_filename(f"{destination_dir}/{filename}")
 
