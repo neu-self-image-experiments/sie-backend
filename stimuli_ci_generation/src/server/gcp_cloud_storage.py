@@ -2,7 +2,6 @@
 
 import os
 from google.cloud import storage
-from server.util import mkdir
 
 
 def download_file(bucket_name, source_blob_name, destination_file_name):
