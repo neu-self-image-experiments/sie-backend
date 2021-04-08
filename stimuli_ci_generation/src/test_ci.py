@@ -12,14 +12,11 @@ NUM_STIMULI_FILES = 2 * 200 + 1
 
 def test_stimuli_ci(test_asset_path="./test_asset"):
     storage_client = storage.Client()
-    start_time = time.time()
 
+    # delete cached test files in bucket
     for identifier in os.listdir(test_asset_path):
         path = test_asset_path + identifier
         if os.path.isdir(path):
-            test_start_time = time.time()
-
-            # delete cached test files in bucket
             for blob in storage_client.list_blobs(
                 gcp_config.MASKED_IMG_BUCKET, prefix=identifier
             ):
@@ -36,6 +33,13 @@ def test_stimuli_ci(test_asset_path="./test_asset"):
                 gcp_config.CI_IMG_BUCKET, prefix=identifier
             ):
                 blob.delete()
+
+    start_time = time.time()
+
+    for identifier in os.listdir(test_asset_path):
+        path = test_asset_path + identifier
+        if os.path.isdir(path):
+            test_start_time = time.time()
 
             upload_file(
                 gcp_config.MASKED_IMG_BUCKET,
