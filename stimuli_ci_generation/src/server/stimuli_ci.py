@@ -8,8 +8,7 @@ from server.util import mkdir
 
 import gcp_config
 
-USER_SELECTION = "user_selection.csv"
-
+USER_SELECTION = 'user_selection.csv'
 
 def generate_stimuli(identifier, file_name):
     """
@@ -47,7 +46,7 @@ def generate_ci(identifier, file_name):
     Run ci and upload results to cloud storage
     Args:
         identifier: participant_id-experiment_id extracted from img filename
-
+        file_name: file name of the user selection file
     Returns:
         None
     """
@@ -60,14 +59,21 @@ def generate_ci(identifier, file_name):
         download_dir(gcp_config.STIMULI_IMG_BUCKET, identifier, f"{stimuli_dir}")
         print(f"downloaded stimuli images to {ws_dir}/stimuli")
 
+    print(f"stimuli has {len(os.listdir(f'{ws_dir}/stimuli'))} files.")
+    if len(os.listdir(f"{ws_dir}/stimuli")) == 0:
+        raise Exception("CI could not be generated due to empty stimuli directory.")
+
+    if (file_name != USER_SELECTION):
+        raise Exception(f"name of user selections file does not match {USER_SELECTION}")
     download_file(
         gcp_config.USER_SELECTION_BUCKET,
-        f"{identifier}/{USER_SELECTION}",
+        f"{identifier}/{file_name}",
         f"{ws_dir}/{USER_SELECTION}",
     )
-    print(f"user_selection.csv has been downloaded to {ws_dir}/{USER_SELECTION}")
+    print(f"user_selection.csv has been downloaded to {ws_dir}/{file_name}")
 
     try:
+        print("started running generate_ci.R")
         subprocess.check_call(["Rscript", r_script_path, ws_dir], shell=False)
         print("Finished running generate_ci.R")
         upload_dir(gcp_config.CI_IMG_BUCKET, ci_dir, identifier)

@@ -73,7 +73,8 @@ def index():
             try:
                 generate_ci(identifier, file_name)
                 return ("Generating ci images...", 202)
-            except Exception:
+            except Exception as e:
+                print(e)
                 return ("Failed to generate ci", 204)
         else:
             # this is for after participants upload their images
