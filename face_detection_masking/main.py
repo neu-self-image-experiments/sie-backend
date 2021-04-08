@@ -15,6 +15,7 @@ from google.cloud import storage
 
 import constants
 import exceptions
+from firestore import update_user_doc
 
 
 def face_check(face):
@@ -390,12 +391,15 @@ def trigger_detect_and_mask(event, context):
         )
 
         # Upload masked image to sie-masked-images bucket
-        participant_id = os.path.splitext(file_name)[0]  # remove file ext
-        cloud_upload_to = f"{participant_id}/{constants.PROCESSED_IMAGE}"
+        new_folder_name = os.path.splitext(file_name)[0]  # remove file ext
+        cloud_upload_to = f"{new_folder_name}/{constants.PROCESSED_IMAGE}"
         upload_image("sie-masked-images", cloud_upload_from, cloud_upload_to)
         print("Processed image saved at: " + cloud_upload_to)
 
     except exceptions.InvalidFaceImage as err:
+        participant_id, experiment_id = file_name.split("-")
+        # Add exception message to the user doc
+        update_user_doc(participant_id, experiment_id, str(err))
         traceback.print_exception(*sys.exc_info())
         return str(err), 400
     except Exception as err:
