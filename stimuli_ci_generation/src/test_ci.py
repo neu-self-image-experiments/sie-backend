@@ -1,10 +1,12 @@
 import os
-import main
+import time
 import gcp_config
 from google.cloud import storage
-from server.gcp_cloud_storage import upload_dir
+from server.gcp_cloud_storage import upload_file
 
-# NUM_STIMULI_FILES = (number of images per selection) * (number of selections) + number of rdata file
+# NUM_STIMULI_FILES =
+# (number of images per selection) * (number of selections)
+# + number of rdata file
 NUM_STIMULI_FILES = 2 * 200 + 1
 
 
@@ -46,7 +48,7 @@ def test_stimuli_ci(test_asset_path="./test_asset"):
                 )
             )
             while len(stimuli_results) < NUM_STIMULI_FILES:
-                sleep(100)
+                time.sleep(0.1)
 
             upload_file(
                 gcp_config.MASKED_IMG_BUCKET,
@@ -56,8 +58,8 @@ def test_stimuli_ci(test_asset_path="./test_asset"):
             ci_results = list(
                 storage_client.list_blobs(gcp_config.CI_IMG_BUCKET, prefix=identifier)
             )
-            while len(stimuli_results) == 0:
-                sleep(100)
+            while len(ci_results) == 0:
+                time.sleep(0.1)
 
             print(
                 f"test for {identifier} finished in {time.time() - test_start_time} ms."
