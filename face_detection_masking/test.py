@@ -34,15 +34,16 @@ def test_upload_processed_images():
     # If all assertions passed, then return test pass
     return "Test passed"
 
+
 def test_upload_image():
     """Unit test for the function upload_images.
 
     Returns:
         String if all assertion passed;
     """
-    bucket_name = 'sie-face-detection-testing-assets'
-    source_file_name = 'test_assets/test_upload_images/fakeID-011.jpg'
-    destination_blob_name = 'fakeID-011'
+    bucket_name = "sie-face-detection-testing-assets"
+    source_file_name = "test_assets/test_upload_images/fakeID-011.jpg"
+    destination_blob_name = "fakeID-011"
 
     # Create connection to the storage
     storage_client = storage.Client()
@@ -52,7 +53,8 @@ def test_upload_image():
 
     # Aessert if the blob exist in the bucket
     assert (
-        storage.Blob(bucket=bucket, name=destination_blob_name).exists(storage_client) is True
+        storage.Blob(bucket=bucket, name=destination_blob_name).exists(storage_client)
+        is True
     )
 
     # Make a falsy test to ensure that it returns false
@@ -70,15 +72,13 @@ def test_download_image():
     Returns:
         String if all assertion passed;
     """
-    bucket_name = 'sie-face-detection-testing-assets'
-    source_blob_name = 'face_neutral.jpg'
-    destination_file_name = 'test_assets/test_upload_images/test_download.jpg'
+    bucket_name = "sie-face-detection-testing-assets"
+    source_blob_name = "face_neutral.jpg"
+    destination_file_name = "test_assets/test_upload_images/test_download.jpg"
 
     main.download_image(bucket_name, source_blob_name, destination_file_name)
 
-    assert (
-        os.path.isfile(destination_file_name) is True
-    )
+    assert os.path.isfile(destination_file_name) is True
 
     os.remove(destination_file_name)
 
