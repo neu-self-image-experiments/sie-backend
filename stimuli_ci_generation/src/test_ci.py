@@ -14,25 +14,7 @@ def test_stimuli_ci(test_asset_path="./test_asset"):
     storage_client = storage.Client()
 
     # delete cached test files in bucket
-    for identifier in os.listdir(test_asset_path):
-        path = test_asset_path + identifier
-        if os.path.isdir(path):
-            for blob in storage_client.list_blobs(
-                gcp_config.MASKED_IMG_BUCKET, prefix=identifier
-            ):
-                blob.delete()
-            for blob in storage_client.list_blobs(
-                gcp_config.STIMULI_IMG_BUCKET, prefix=identifier
-            ):
-                blob.delete()
-            for blob in storage_client.list_blobs(
-                gcp_config.USER_SELECTION_BUCKET, prefix=identifier
-            ):
-                blob.delete()
-            for blob in storage_client.list_blobs(
-                gcp_config.CI_IMG_BUCKET, prefix=identifier
-            ):
-                blob.delete()
+    clear_cache(test_asset_path, storage_client)
 
     start_time = time.time()
 
@@ -70,3 +52,25 @@ def test_stimuli_ci(test_asset_path="./test_asset"):
             )
 
     print(f"all tests finished in {time.time() - start_time} ms.")
+
+
+def clear_cache(test_asset_path, storage_client):
+    for identifier in os.listdir(test_asset_path):
+        path = test_asset_path + identifier
+        if os.path.isdir(path):
+            for blob in storage_client.list_blobs(
+                gcp_config.MASKED_IMG_BUCKET, prefix=identifier
+            ):
+                blob.delete()
+            for blob in storage_client.list_blobs(
+                gcp_config.STIMULI_IMG_BUCKET, prefix=identifier
+            ):
+                blob.delete()
+            for blob in storage_client.list_blobs(
+                gcp_config.USER_SELECTION_BUCKET, prefix=identifier
+            ):
+                blob.delete()
+            for blob in storage_client.list_blobs(
+                gcp_config.CI_IMG_BUCKET, prefix=identifier
+            ):
+                blob.delete()

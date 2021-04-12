@@ -60,7 +60,6 @@ def generate_ci(identifier, file_name):
         download_dir(gcp_config.STIMULI_IMG_BUCKET, identifier, f"{stimuli_dir}")
         print(f"downloaded stimuli images to {ws_dir}/stimuli")
 
-    print(f"stimuli has {len(os.listdir(f'{ws_dir}/stimuli'))} files.")
     if len(os.listdir(f"{ws_dir}/stimuli")) == 0:
         raise Exception("CI could not be generated due to empty stimuli directory.")
 
