@@ -35,6 +35,11 @@ def test_stimuli_ci(test_asset_path="./test_asset"):
             )
             while len(stimuli_results) < NUM_STIMULI_FILES:
                 time.sleep(0.1)
+                stimuli_results = list(
+                    storage_client.list_blobs(
+                        gcp_config.STIMULI_IMG_BUCKET, prefix=identifier
+                    )
+                )
 
             upload_file(
                 gcp_config.MASKED_IMG_BUCKET,
@@ -46,6 +51,11 @@ def test_stimuli_ci(test_asset_path="./test_asset"):
             )
             while len(ci_results) == 0:
                 time.sleep(0.1)
+                ci_results = list(
+                    storage_client.list_blobs(
+                        gcp_config.CI_IMG_BUCKET, prefix=identifier
+                    )
+                )
 
             print(
                 f"test for {identifier} finished in {time.time() - test_start_time} ms."
