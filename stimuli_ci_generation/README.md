@@ -42,11 +42,7 @@ Containers must be built in the following order and use the correct tags:
 - Google Cloud Run
     ```
     // Deploy docker container
-    gcloud run deploy sie-image-processing --image gcr.io/$GCP_PROJECT/stimuli_ci_app:latest
-
-    // select [1] Cloud Run (fully managed)
-    // select [16] northamerica-northeast1 region
-    // Allow unauthenticated invocations to [sie-image-processing] (y/N)?  n
+    gcloud run deploy sie-image-processing --image gcr.io/$GCP_PROJECT/stimuli_ci_app:latest --platform managed --region northamerica-northeast1
 
     // Create a pub/sub topic
     gcloud pubsub topics create sie-image-processing
