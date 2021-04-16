@@ -1,4 +1,5 @@
-from flask import escape
+#!/usr/bin/env python
+
 from firestore import update_user_doc
 
 
@@ -27,7 +28,7 @@ def catch_qualtrics_requests(request):
     }
     try:
         update_user_doc(participant_id, experiment_id, qualtrics_responses)
-    except Exception as e:
+    except AttributeError as e:
         print(e)
 
-    return "Hello {}!".format(escape(participant_id))
+    return request_args

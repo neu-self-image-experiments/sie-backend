@@ -10,7 +10,7 @@ STIMULI_BUCKET = "sie-stimuli-images"
 class PipelineRunnable:
     """
     This is the thread class which uploads image to GCP and record the
-    finishing timee for the pipeline.
+    finishing time for the pipeline.
     """
 
     def __init__(self, participant_id, sleep_time, threshold):
