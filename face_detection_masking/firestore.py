@@ -36,4 +36,4 @@ def update_user_doc(participant_id: str, experiment_id: str, attributes: dict):
 
     if attributes:
         # update if exists, otherwise create a new doc
-        user_doc_ref.set(attributes, merge=True)
+        doc_ref.set(attributes, merge=True)
