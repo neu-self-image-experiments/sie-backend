@@ -80,6 +80,9 @@ def test_download_image():
 
     assert os.path.isfile(destination_file_name) is True
 
-    os.remove(destination_file_name)
+    try:
+        os.remove(destination_file_name)
+    except OSError:
+        pass
 
     return "Test passed"
