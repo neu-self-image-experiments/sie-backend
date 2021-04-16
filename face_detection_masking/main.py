@@ -353,10 +353,18 @@ def trigger_detect_and_mask(event, context):
 
     # fetching image from this URI
     uri = cloud_storage_prefix + cloud_download_from
+    participant_id, experiment_id = new_folder_name.split("-")
 
     try:
         # check for face
         results = face_detection(uri)
+
+        # update instant feedback to participant
+        update_user_doc(
+            participant_id,
+            experiment_id,
+            {"facial_detection_status": "completed"},
+        )
 
         # download images from bucket sie-raw-images to create a mask
         download_image(bucket_name, cloud_download_from, cloud_download_to)
@@ -397,12 +405,11 @@ def trigger_detect_and_mask(event, context):
         print("Processed image saved at: " + cloud_upload_to)
 
     except exceptions.InvalidFaceImage as err:
-        participant_id, experiment_id = new_folder_name.split("-")
         # Add exception message to the user doc
         update_user_doc(
             participant_id,
             experiment_id,
-            {"sie_stimuli_generation_status": str(err)},
+            {"facial_detection_status": str(err)},
         )
         traceback.print_exception(*sys.exc_info())
         return str(err), 400
