@@ -24,7 +24,11 @@ def update_user_doc(participant_id: str, experiment_id: str, attributes: dict):
         None
     """
 
-    user_doc_ref = db.collection(
+    user_doc_ref = db.collection(FIRESTORE_USER_COLLECTION).document(participant_id)
+    if not user_doc_ref.get().exists:
+        raise AttributeError("Participant id does not exists.")
+
+    doc_ref = db.collection(
         f"{FIRESTORE_USER_COLLECTION}/"
         f"{participant_id}/"
         f"{FIRESTORE_USER_EXPERIMENT_SUBCOLLECTION}"
@@ -32,4 +36,4 @@ def update_user_doc(participant_id: str, experiment_id: str, attributes: dict):
 
     if attributes:
         # update if exists, otherwise create a new doc
-        user_doc_ref.set(attributes, merge=True)
+        doc_ref.set(attributes, merge=True)
