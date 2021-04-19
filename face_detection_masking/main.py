@@ -50,7 +50,7 @@ def face_check(face):
         or face.tilt_angle > constants.ANGLE_THRESHOLD
     ):
         raise exceptions.InvalidFaceImage(
-            "Please face straight towards your camera, avoid tiliting."
+            "Please face straight towards your camera, avoid tilting."
         )
 
     return True
