@@ -83,7 +83,7 @@ def index():
                 update_user_doc(
                     participant_id,
                     experiment_id,
-                    {"sie_ci_generation_status": "incomplet"},
+                    {"sie_ci_generation_status": "incomplete"},
                 )
                 return ("Failed to generate ci", 204)
         else:
