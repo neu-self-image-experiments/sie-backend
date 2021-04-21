@@ -72,9 +72,19 @@ def index():
             # this is for after participants finishes with their img selections
             try:
                 generate_ci(identifier, file_name)
+                update_user_doc(
+                    participant_id,
+                    experiment_id,
+                    {"sie_ci_generation_status": "completed"},
+                )
                 return ("Generating ci images...", 202)
             except Exception as e:
                 print(e)
+                update_user_doc(
+                    participant_id,
+                    experiment_id,
+                    {"sie_ci_generation_status": "incomplet"},
+                )
                 return ("Failed to generate ci", 204)
         else:
             # this is for after participants upload their images
